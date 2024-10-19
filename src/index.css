@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'HelveticaNowText-Light';
-    src: url('../src/font/HelveticaNowText-Light.ttf') format('truetype');
+    font-family: 'HelveticaNowText-Regular';
+    src: url('../src/font/HelveticaNowText-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 * {
-    font-family: 'HelveticaNowText-Light';
+    font-family: 'HelveticaNowText-Regular';
 }
 
 *,
@@ -32,7 +32,7 @@ blockquote,
 dl,
 dd {
     margin: 0;
-    
+
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
@@ -117,4 +117,25 @@ a {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+}
+
+/* Carousel arrows*/
+.ant-carousel .slick-prev,
+.ant-carousel .slick-prev:hover {
+    left: 50px;
+    z-index: 2;
+    color: black;
+    font-size: 40px;
+    width: 50px;
+    height: 50px;
+}
+
+.ant-carousel .slick-next,
+.ant-carousel .slick-next:hover {
+    right: 50px;
+    z-index: 2;
+    color: black;
+    font-size: 40px;
+    width: 50px;
+    height: 50px;
 }
