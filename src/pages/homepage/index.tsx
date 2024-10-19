@@ -16,7 +16,28 @@ import AirMax90 from "../../assets/img/air-max-90-lv8-shoes-5KhTdP.png";
 import NikeRunning from "../../assets/img/nike_running.jpg";
 import NikeMember from "../../assets/img/nike-member.jpg";
 import { Link } from "react-router-dom";
+import { ProductCategory } from "../../type/product-types";
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 
+
+const Product = [
+  {
+    imgUrl: Nike1,
+    category: ProductCategory.JUST_IN,
+    name: 'P6000'
+  },
+  {
+    imgUrl: Nike2,
+    category: ProductCategory.RUN_IN_RAIN,
+    name: 'Nike Pegasus 41 GORE-TEX'
+  },
+  {
+    imgUrl: Nike3,
+    category: ProductCategory.EASY_ON,
+    name: 'For playtime'
+  },
+]
 const HomepageComponent = () => {
   const membersSlides = Array(8).fill({
     imgSrc: NikeMember,
@@ -122,6 +143,9 @@ const HomepageComponent = () => {
             Join Us
           </a>
           <Link to="/register" className=" hover:text-gray-600 border-2 pl-2">
+            Sign Up
+          </Link>
+          <Link to="/login" className=" hover:text-gray-600 border-2 pl-2">
             Sign In
           </Link>
         </nav>
@@ -213,7 +237,7 @@ const HomepageComponent = () => {
 
         <>
           <video
-            className="h-[900px] w-full object-cover px-12"
+            className="h-[900px] w-full object-cover"
             muted
             loop
             autoPlay
@@ -240,50 +264,24 @@ const HomepageComponent = () => {
         <div className="pt-20 px-12">
           <h2 className="capitalize text-2xl pb-6">featured</h2>
           <div className="grid grid-cols-3 gap-4">
-            <div className="relative">
-              <img
-                src={Nike1}
-                alt="Nike Just Do It!"
-                className="h-full w-full"
-              />
-              <div className="absolute bottom-12 left-12">
-                <p className="pb-2 text-white">Just In</p>
-                <h3 className="pb-5 text-white text-xl">P-6000</h3>
-                <button className="bg-white text-black rounded-full capitalize px-4 py-1">
-                  shop
-                </button>
+            {Product.map(item => (
+              <div className="relative">
+                <div className="h-full w-full overflow-hidden">
+                  <img
+                    src={item.imgUrl}
+                    alt="Nike Just Do It!"
+                    className="hover:scale-125"
+                  />
+                </div>
+                <div className="absolute bottom-12 left-12">
+                  <p className="pb-2 text-white">{item.category}</p>
+                  <h3 className="pb-5 text-white text-xl">{item.name}</h3>
+                  <button className="bg-white text-black rounded-full capitalize px-4 py-1">
+                    shop
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="relative">
-              <img
-                src={Nike2}
-                alt="Nike Just Do It!"
-                className="h-full w-full"
-              />
-              <div className="absolute bottom-12 left-12">
-                <p className="pb-2 text-white">Run in the Rain</p>
-                <h3 className="pb-5 text-white text-xl">
-                  Nike Pegasus 41 GORE-TEX
-                </h3>
-                <button className="bg-white text-black rounded-full capitalize px-4 py-1">
-                  shop
-                </button>
-              </div>
-            </div>
-            <div className="relative">
-              <img
-                src={Nike3}
-                alt="Nike Just Do It!"
-                className="h-full w-full"
-              />
-              <div className="absolute bottom-12 left-12">
-                <p className="pb-2 text-white">EasyOn</p>
-                <h3 className="pb-5 text-white text-xl">For playtime</h3>
-                <button className="bg-white text-black rounded-full capitalize px-4 py-1">
-                  shop
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
