@@ -1,0 +1,10 @@
+.search_form {
+    background: url('../../assets/icon/searchIcon.svg') no-repeat scroll 5px;
+    padding-left: 30px;
+    width: 180px;
+    height: 36px;
+}
+
+.search_form::placeholder {
+    color: black
+}

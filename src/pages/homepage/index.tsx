@@ -1,9 +1,5 @@
 import {
-  CartIcon,
-  InterestedIcon,
-  JordanLogo,
   LanguageIcon,
-  Nikelogo,
 } from "../../components/icons/IconSvg";
 import styles from "./index.module.css";
 import { Carousel } from "antd";
@@ -15,10 +11,9 @@ import V2k from "../../assets/img/v2k_shoes.png";
 import AirMax90 from "../../assets/img/air-max-90-lv8-shoes-5KhTdP.png";
 import NikeRunning from "../../assets/img/nike_running.jpg";
 import NikeMember from "../../assets/img/nike-member.jpg";
-import { Link } from "react-router-dom";
 import { ProductCategory } from "../../type/product-types";
-import { useContext } from "react";
-import { AppContext } from "../../context/AppContext";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer/Footer";
 
 
 const Product = [
@@ -90,115 +85,8 @@ const HomepageComponent = () => {
     ],
   ];
 
-  const footerItems = [
-    [
-      "Resources",
-      "Find A Store",
-      "Become A Member",
-      "Send Us Feedback",
-      "Find A Store",
-      "Become A Member",
-      "Send Us Feedback",
-    ],
-    [
-      "Help",
-      "Get Help",
-      "Order Status",
-      "Delivery",
-      "Returns",
-      "Payment Options",
-      "Contact Us",
-    ],
-    [
-      "About Nike",
-      "About Nike",
-      "News",
-      "Careers",
-      "Investors",
-      "Sustainability",
-    ],
-  ];
-
   return (
     <section>
-      <header className="bg-gray-300 flex justify-between px-10 py-2">
-        <JordanLogo />
-        <nav className="flex justify-items-end font-bold">
-          <a
-            href="#"
-            className=" hover:text-gray-600 border-2  border-r-black pr-2 pl-2"
-          >
-            Find a Store
-          </a>
-          <a
-            href="#"
-            className=" hover:text-gray-600 border-2 border-r-black pr-2 pl-2"
-          >
-            Help
-          </a>
-          <a
-            href="#"
-            className=" hover:text-gray-600 border-2 border-r-black pr-2 pl-2"
-          >
-            Join Us
-          </a>
-          <Link to="/register" className=" hover:text-gray-600 border-2 pl-2">
-            Sign Up
-          </Link>
-          <Link to="/login" className=" hover:text-gray-600 border-2 pl-2">
-            Sign In
-          </Link>
-        </nav>
-      </header>
-
-      <header className="bg-white grid grid-cols-12 gap-4 items-center px-10 py-2">
-        <div className="col-span-2">
-          <Nikelogo />
-        </div>
-
-        <nav className="col-span-7 flex justify-center font-bold space-x-3">
-          <a href="#" className="px-3">
-            New & Featured
-          </a>
-          <a href="#" className="px-3">
-            Men
-          </a>
-          <a href="#" className="px-3">
-            Women
-          </a>
-          <a href="#" className="px-3">
-            Kids
-          </a>
-          <a href="#" className="px-3">
-            Sale
-          </a>
-          <a href="#" className="px-3">
-            Customise
-          </a>
-          <a href="#" className="">
-            SNKRS
-          </a>
-        </nav>
-
-        <div className="col-span-3 flex items-center justify-end gap-4">
-          <form className="border border-slate-300 rounded-3xl bg-gray-200 hover:bg-gray-300">
-            <input
-              type="text"
-              className={`${styles.search_form} `}
-              placeholder="Search"
-            />
-          </form>
-          <div className="flex items-center space-x-4">
-            <div className="p-2 hover:bg-gray-300 rounded-full">
-              <InterestedIcon />
-            </div>
-            <div className="p-2 hover:bg-gray-300 rounded-full">
-              <CartIcon />
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main>
         <Carousel
           className="text-center p-4 h-auto bg-gray-300"
@@ -456,41 +344,6 @@ const HomepageComponent = () => {
           </div>
         </div>
       </main>
-
-      <footer>
-        <div className="menu-grid p-12 ">
-          <div className="grid grid-cols-4 text-sm border-t-gray-300 border-2">
-            {footerItems.map((column, colIndex) => (
-              <ul key={colIndex} className="space-y-2 mt-12">
-                {column.map((item, index) =>
-                  index === 0 ? (
-                    <h4 key={index} className="font-bold text-gray-900 pb-6">
-                      {item}
-                    </h4>
-                  ) : (
-                    <li key={index} className="text-gray-500 font-medium">
-                      {item}
-                    </li>
-                  )
-                )}
-              </ul>
-            ))}
-            <span className="inline-flex justify-end mt-12">
-              <LanguageIcon /> Vietnam
-            </span>
-          </div>
-        </div>
-
-        <div className="p-12 text-gray-600">
-          <ul className="flex">
-            <li className="mr-5">© 2024 Nike, Inc. All rights reserved</li>
-            <li className="mr-5">Guides</li>
-            <li className="mr-5">Terms of Sale</li>
-            <li className="mr-5">Terms of Use</li>
-            <li className="mr-5">Nike Privacy Policy</li>
-          </ul>
-        </div>
-      </footer>
     </section>
   );
 };

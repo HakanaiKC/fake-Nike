@@ -5,13 +5,19 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./output.css";
 import HomepageComponent from "./pages/homepage/index.tsx";
 import { RegisterPage } from "./pages/register/index.tsx";
-import AuthService from "./services/auth/authService.ts";
 import { AppProvider } from "./context/AppContext.tsx";
+import Layout from "./pages/Layout/index.tsx";
+import ProductDetail from "./pages/product/index.tsx";
 
 const router = createBrowserRouter([
+
   {
     path: "/",
-    element: <HomepageComponent />,
+    element: <Layout />,
+    children: [{
+      path: "/",
+      element: <HomepageComponent />
+    }]
   },
   {
     path: "/register",
@@ -20,6 +26,14 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <RegisterPage />,
+  },
+  {
+    path: "/product",
+    element: <Layout />,
+    children: [{
+      path: "/product:productId",
+      element: <ProductDetail/>
+    }]
   },
 ]);
 

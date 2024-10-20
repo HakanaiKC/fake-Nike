@@ -8,7 +8,12 @@
     font-weight: normal;
     font-style: normal;
 }
-
+@font-face {
+    font-family: "Nike Futura ND";
+    src: url("../src/font/NikeFuturaND.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 * {
     font-family: 'HelveticaNowText-Regular';
 }
