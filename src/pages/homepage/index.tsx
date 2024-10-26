@@ -1,6 +1,3 @@
-import {
-  LanguageIcon,
-} from "../../components/icons/IconSvg";
 import styles from "./index.module.css";
 import { Carousel } from "antd";
 import Nike1 from "../../assets/img/nike-just-do-it.jpg";
@@ -12,27 +9,25 @@ import AirMax90 from "../../assets/img/air-max-90-lv8-shoes-5KhTdP.png";
 import NikeRunning from "../../assets/img/nike_running.jpg";
 import NikeMember from "../../assets/img/nike-member.jpg";
 import { ProductCategory } from "../../type/product-types";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer/Footer";
-
+import { Link } from "react-router-dom";
 
 const Product = [
   {
     imgUrl: Nike1,
     category: ProductCategory.JUST_IN,
-    name: 'P6000'
+    name: "P6000",
   },
   {
     imgUrl: Nike2,
     category: ProductCategory.RUN_IN_RAIN,
-    name: 'Nike Pegasus 41 GORE-TEX'
+    name: "Nike Pegasus 41 GORE-TEX",
   },
   {
     imgUrl: Nike3,
     category: ProductCategory.EASY_ON,
-    name: 'For playtime'
+    name: "For playtime",
   },
-]
+];
 const HomepageComponent = () => {
   const membersSlides = Array(8).fill({
     imgSrc: NikeMember,
@@ -152,8 +147,8 @@ const HomepageComponent = () => {
         <div className="pt-20 px-12">
           <h2 className="capitalize text-2xl pb-6">featured</h2>
           <div className="grid grid-cols-3 gap-4">
-            {Product.map(item => (
-              <div className="relative">
+            {Product.map((item, index) => (
+              <div className="relative" key={item.imgUrl + index}>
                 <div className="h-full w-full overflow-hidden">
                   <img
                     src={item.imgUrl}
@@ -184,16 +179,18 @@ const HomepageComponent = () => {
             className="capitalize"
           >
             {shoesSlides.map((slide, index) => (
-              <div key={index} className="slide p-2">
-                <img
-                  src={slide.imgSrc}
-                  alt={slide.alt}
-                  className="h-full w-full"
-                />
-                <h4 className="pt-3 font-bold">{slide.title}</h4>
-                <h5 className="text-gray-500">{slide.description}</h5>
-                <h3 className="pt-2 font-bold">{slide.price}</h3>
-              </div>
+              <Link to={`product/1`}>
+                <div key={index} className="slide p-2">
+                  <img
+                    src={slide.imgSrc}
+                    alt={slide.alt}
+                    className="h-full w-full"
+                  />
+                  <h4 className="pt-3 font-bold">{slide.title}</h4>
+                  <h5 className="text-gray-500">{slide.description}</h5>
+                  <h3 className="pt-2 font-bold">{slide.price}</h3>
+                </div>
+              </Link>
             ))}
           </Carousel>
         </div>
@@ -235,11 +232,13 @@ const HomepageComponent = () => {
           >
             {vkSlides.map((slide, index) => (
               <div key={index} className="slide p-2">
-                <img
-                  src={slide.imgSrc}
-                  alt={slide.alt}
-                  className="h-full w-full"
-                />
+                <Link to={"/product/listproducts"}>
+                  <img
+                    src={slide.imgSrc}
+                    alt={slide.alt}
+                    className="h-full w-full"
+                  />
+                </Link>
               </div>
             ))}
           </Carousel>

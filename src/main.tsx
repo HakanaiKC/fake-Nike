@@ -8,16 +8,18 @@ import { RegisterPage } from "./pages/register/index.tsx";
 import { AppProvider } from "./context/AppContext.tsx";
 import Layout from "./pages/Layout/index.tsx";
 import ProductDetail from "./pages/product/index.tsx";
+import { ProductListPage } from "./pages/productList/index.tsx";
 
 const router = createBrowserRouter([
-
   {
     path: "/",
     element: <Layout />,
-    children: [{
-      path: "/",
-      element: <HomepageComponent />
-    }]
+    children: [
+      {
+        path: "/",
+        element: <HomepageComponent />,
+      },
+    ],
   },
   {
     path: "/register",
@@ -30,10 +32,16 @@ const router = createBrowserRouter([
   {
     path: "/product",
     element: <Layout />,
-    children: [{
-      path: "/product:productId",
-      element: <ProductDetail/>
-    }]
+    children: [
+      {
+        path: ":productId",
+        element: <ProductDetail />,
+      },
+      {
+        path: "listproducts",
+        element: <ProductListPage />,
+      },
+    ],
   },
 ]);
 

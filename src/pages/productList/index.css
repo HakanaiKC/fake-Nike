@@ -1,0 +1,25 @@
+.custom-checkbox .ant-checkbox-inner {
+    width: 20px;
+    height: 20px;
+    border-color: black;
+}
+
+.custom-checkbox .ant-checkbox {
+    width: 20px;
+    height: 20px;
+    border-color: black;
+}
+
+.custom-checkbox span {
+    font-size: 16px;
+}
+
+.custom-collapse .ant-collapse-header-text {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.custom-collapse {
+    border: none;
+    background-color: white;
+}
