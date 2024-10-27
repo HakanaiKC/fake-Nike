@@ -6,7 +6,9 @@ export const Header = () => {
     return (
         <header>
             <div className="bg-gray-300 flex justify-between px-10 py-2">
-                <JordanLogo />
+                <Link to={'/'}>
+                    <JordanLogo />
+                </Link>
                 <nav className="flex justify-items-end font-bold">
                     <a
                         href="#"
@@ -37,7 +39,9 @@ export const Header = () => {
 
             <div className="bg-white grid grid-cols-12 gap-4 items-center px-10 py-2">
                 <div className="col-span-2">
-                    <Nikelogo />
+                    <Link to={'/'}>
+                        <Nikelogo />
+                    </Link>
                 </div>
 
                 <nav className="col-span-7 flex justify-center font-bold space-x-3">
