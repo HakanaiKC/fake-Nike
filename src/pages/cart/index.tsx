@@ -34,7 +34,7 @@ const CartPage = () => {
     <>
       <div className="mt-9">
         <div className="flex w-full justify-center">
-          <div>
+          <div className="mr-6 max-w-2/3">
             <div className="border border-gray-400 p-3">
               <h2 className="text-xl text-[#FF5000] font-bold">
                 Free Delivery for Members.
@@ -50,14 +50,14 @@ const CartPage = () => {
                 </Link>
               </p>
             </div>
-            <div>
+            <div className="mt-3">
               <h2 className="capitalize text-2xl font-bold">bag</h2>
-              <div className="flex items-start">
+              <div className="flex items-start py-6">
                 <div>
                   <img
                     src={WhiteNike}
                     alt="Nike Cortez Textile"
-                    className="w-[164px] h-[164px]"
+                    className="w-[164px] h-[164px] mr-5"
                   />
                 </div>
                 <div>
@@ -70,11 +70,11 @@ const CartPage = () => {
                     Size <span className="underline cursor-pointer">5.5</span>
                   </p>
                 </div>
-                <div>
+                <div className="ml-12">
                   <p className="font-bold">4,409,000₫</p>
                 </div>
               </div>
-              <div className="flex gap-4 py-6 border-b border-gray-300">
+              <div className="flex gap-4 pb-6 border-b border-gray-300">
                 <div className="flex items-center gap-2 border border-gray-300 rounded-full">
                   <Button
                     className="border-0 w-10 h-10 rounded-full hover:!bg-gray-300 hover:!text-black"
@@ -96,45 +96,55 @@ const CartPage = () => {
               </div>
             </div>
             <div className="mt-6">
-          <h2 className="capitalize text-2xl font-bold">favourites</h2>
-          <p>
-            Want to view your favourites?{" "}
-            <Link to={"/register"} className="underline text-gray-500">
-              Join us
-            </Link>{" "}
-            or{" "}
-            <Link to={"/login"} className="underline text-gray-500">
-              Sign in
-            </Link>
-          </p>
-        </div>
+              <h2 className="capitalize text-2xl font-bold">favourites</h2>
+              <p>
+                Want to view your favourites?{" "}
+                <Link to={"/register"} className="underline text-gray-500">
+                  Join us
+                </Link>{" "}
+                or{" "}
+                <Link to={"/login"} className="underline text-gray-500">
+                  Sign in
+                </Link>
+              </p>
+            </div>
           </div>
-          <div>
+          <div className="max-w-1/3">
             <h2 className="capitalize text-2xl font-bold mt-6">Sumary</h2>
             <div className="grid grid-cols-2 gap-y-2 py-4">
-  <div className="flex items-center">
-    <span>Subtotal</span>
-    <Tooltip placement="bottomRight" title={text} className="ml-2" color="rgb(88, 88, 88)">
-      <QuestionCircleFilled className="w-3"/>
-    </Tooltip>
-  </div>
-  <span className="text-right font-semibold">4,409,000₫</span>
+              <div className="flex items-center">
+                <span>Subtotal</span>
+                <Tooltip
+                  placement="bottomRight"
+                  title={text}
+                  className="ml-2"
+                  color="rgb(88, 88, 88)"
+                >
+                  <QuestionCircleFilled className="w-3" />
+                </Tooltip>
+              </div>
+              <span className="text-right">4,409,000₫</span>
 
-  <span>Estimated Delivery & Handling</span>
-  <span className="text-right font-semibold">250,000₫</span>
+              <span>Estimated Delivery & Handling</span>
+              <span className="text-right">250,000₫</span>
 
-  <div className="col-span-2 p-4 my-3 border border-y-gray-300">
-    <div className="flex justify-between">
-      <span className="font-bold">Total</span>
-      <span className="text-right font-bold">4,659,000₫</span>
-    </div>
-  </div>
-  
-</div>
-
+              <div className="col-span-2 py-4 my-3 border border-y-gray-300">
+                <div className="flex justify-between">
+                  <span>Total</span>
+                  <span className="text-right">4,659,000₫</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button className="w-full py-[18px] px-6 bg-black text-white capitalize rounded-[30px] font-bold mb-3">
+                guest checkout
+              </button>
+              <button className="w-full py-[18px] px-6 bg-black text-white capitalize rounded-[30px] font-bold">
+                member checkout
+              </button>
+            </div>
           </div>
         </div>
-        
       </div>
 
       <div className="pt-20 px-12">
