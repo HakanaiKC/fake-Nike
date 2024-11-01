@@ -70,6 +70,40 @@ const shoesCategoriesItems: CollapseProps["items"] = [
       </>
     ),
   },
+  {
+    key: "4",
+    label: "Color",
+    children: (
+      <>
+        <div className="grid grid-cols-3 justify-items-center">
+          <div className="flex mb-5 flex-col items-center">
+            <div className="w-7 h-7 bg-black rounded-full"></div>
+            <p>Black</p>
+          </div>
+          <div className="flex mb-5 flex-col items-center">
+            <div className="w-7 h-7 bg-blue-700 rounded-full"></div>
+            <p>Blue</p>
+          </div>
+          <div className="flex mb-5 flex-col items-center">
+            <div className="w-7 h-7 bg-white rounded-full border border-gray-300"></div>
+            <p>White</p>
+          </div>
+          <div className="flex mb-5 flex-col items-center">
+            <div className="w-7 h-7 bg-amber-900 rounded-full"></div>
+            <p>Brown</p>
+          </div>
+          <div className="flex mb-5 flex-col items-center">
+            <div className="w-7 h-7 bg-red-600 rounded-full"></div>
+            <p>Red</p>
+          </div>
+          <div className="flex mb-5 flex-col items-center">
+            <div className="w-7 h-7 bg-yellow-400 rounded-full"></div>
+            <p>Yellow</p>
+          </div>
+        </div>
+      </>
+    ),
+  },
 ];
 
 export const ProductListPage = () => {

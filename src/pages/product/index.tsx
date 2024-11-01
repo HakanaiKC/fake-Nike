@@ -1,4 +1,12 @@
-import { Button, Carousel, Collapse, CollapseProps, Modal, Rate, Space } from "antd";
+import {
+  Button,
+  Carousel,
+  Collapse,
+  CollapseProps,
+  Modal,
+  Rate,
+  Space,
+} from "antd";
 import { InterestedIcon } from "../../components/icons/IconSvg";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -20,7 +28,12 @@ import shoesWhite6 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-5.png"
 import shoesWhite7 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-6.png";
 import shoesWhite8 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-7.png";
 import shoesWhite9 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-8.png";
-import { CheckCircleFilled, CheckCircleOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  CheckCircleOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import ProductDetailModal from "../../components/Modal/ProductDetailModal";
 
 interface ImageColor {
@@ -196,10 +209,10 @@ const InfoItems: CollapseProps["items"] = [
 ];
 
 const ProductDetail = () => {
-  const [activeProductColor, setActiveProductColor] = useState<string>(ListImagesColor[0].id);
-  const [listImages, setListImages] = useState<ImageColor>(
-    ListImagesColor[0]
+  const [activeProductColor, setActiveProductColor] = useState<string>(
+    ListImagesColor[0].id
   );
+  const [listImages, setListImages] = useState<ImageColor>(ListImagesColor[0]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCartOpen, setIsModalCartOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<number>();
@@ -226,9 +239,9 @@ const ProductDetail = () => {
 
   const handleSelectSize = (id: number) => {
     setSelectedSize(id);
-    setIsSelectedSize(true)
-    setErrorMessage("")
-  }
+    setIsSelectedSize(true);
+    setErrorMessage("");
+  };
 
   const handleHoverOnImage = (index: number) => {
     setCurrentImageIndex(index);
@@ -236,11 +249,12 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (isSelectedSize) {
-      setIsModalCartOpen(true)
-    }else{
-      setErrorMessage("Please select a size.")
+      window.scrollTo(0, 0);
+      setIsModalCartOpen(true);
+    } else {
+      setErrorMessage("Please select a size.");
     }
-  }
+  };
 
   const nextImage = () => {
     setCurrentImageIndex(
@@ -272,9 +286,7 @@ const ProductDetail = () => {
           </a>
         </div>
         <div>
-          <p className="text-base">
-            Move, Shop, Customise & Celebrate With Us
-          </p>
+          <p className="text-base">Move, Shop, Customise & Celebrate With Us</p>
           <p className="text-xs">
             No matter what you feel like doing today, It's better as a Member.
           </p>
@@ -310,7 +322,9 @@ const ProductDetail = () => {
                   />
                   <div
                     onMouseEnter={() => handleHoverOnImage(index)}
-                    className={`${currentImageIndex === index ? "opacity-40" : ""}
+                    className={`${
+                      currentImageIndex === index ? "opacity-40" : ""
+                    }
                     absolute bottom-0 left-0 right-0 top-0 h-[60px] w-[60px] overflow-hidden bg-gray-300 bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-40`}
                   ></div>
                 </div>
@@ -325,10 +339,18 @@ const ProductDetail = () => {
                   className="rounded"
                 />
                 <div className="absolute right-6 bottom-6">
-                  <Button onClick={prevImage} shape="circle" className="mr-2 !border-white h-[36px] w-[36px]">
+                  <Button
+                    onClick={prevImage}
+                    shape="circle"
+                    className="mr-2 !border-white h-[36px] w-[36px]"
+                  >
                     <LeftOutlined />
                   </Button>
-                  <Button onClick={nextImage} shape="circle" className="!border-white h-[36px] w-[36px]">
+                  <Button
+                    onClick={nextImage}
+                    shape="circle"
+                    className="!border-white h-[36px] w-[36px]"
+                  >
                     <RightOutlined />
                   </Button>
                 </div>
@@ -342,8 +364,11 @@ const ProductDetail = () => {
             <div className="mt-8 flex flex-row gap-3">
               {ListImagesColor.map((image) => (
                 <div
-                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${activeProductColor === image.id ? "border-2 border-black" : ""
-                    }`}
+                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${
+                    activeProductColor === image.id
+                      ? "border-2 border-black"
+                      : ""
+                  }`}
                   key={image.id}
                   onClick={() => handleClickGetListActive(image)}
                 >
@@ -357,7 +382,9 @@ const ProductDetail = () => {
             </div>
             <div className="mt-8 mb-8">
               <div className="flex flex-row justify-between items-center">
-                <span className={`${errorMessage && "text-red-700"}`}>Select Size</span>
+                <span className={`${errorMessage && "text-red-700"}`}>
+                  Select Size
+                </span>
                 <a href="#" className="text-sm flex flex-row gap-2">
                   <svg
                     aria-hidden="true"
@@ -385,7 +412,9 @@ const ProductDetail = () => {
               <div className="grid grid-cols-5 gap-2 mt-3">
                 {ListSizes.map((size, index) => (
                   <div
-                    className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${selectedSize === size.id ? "!border-black" : ""}`}
+                    className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${
+                      selectedSize === size.id ? "!border-black" : ""
+                    }`}
                     key={index + size.size}
                     onClick={() => handleSelectSize(size.id)}
                   >
@@ -396,7 +425,10 @@ const ProductDetail = () => {
               <p className="text-red-700 mt-3">{errorMessage}</p>
             </div>
             <div className="mb-8">
-              <button className="bg-black text-white rounded-full h-[60px] px-6 mb-3 font-bold w-[328px] flex items-center justify-center hover:opacity-70" onClick={handleAddToCart}>
+              <button
+                className="bg-black text-white rounded-full h-[60px] px-6 mb-3 font-bold w-[328px] flex items-center justify-center hover:opacity-70"
+                onClick={handleAddToCart}
+              >
                 Add to Bag
               </button>
               <button className="rounded-full h-[60px] px-6 mb-3 font-bold w-[328px] flex items-center justify-center border-2 border-gray-300 hover:border-black">
@@ -405,17 +437,24 @@ const ProductDetail = () => {
             </div>
             <Modal
               title={
-                <p><CheckCircleFilled className="mr-3 text-green-500" />Added to Bag</p>
+                <p>
+                  <CheckCircleFilled className="mr-3 text-green-500" />
+                  Added to Bag
+                </p>
               }
               style={{ top: 80 }}
-              footer={[<>
-                <button className="rounded-full h-[60px] px-6 mb-3 font-bold w-full flex items-center justify-center border-2 border-gray-300 hover:border-black">
-                  View Bag (0)
-                </button>
-                <button className="bg-black text-white rounded-full h-[60px] px-6 mb-3 font-bold w-full flex items-center justify-center hover:opacity-70">
-                  Checkout
-                </button>
-              </>]}
+              footer={[
+                <>
+                  <Link to={"/cart"}>
+                    <button className="rounded-full h-[60px] px-6 mb-3 font-bold w-full flex items-center justify-center border-2 border-gray-300 hover:border-black">
+                      View Bag (1)
+                    </button>
+                  </Link>
+                  <button className="bg-black text-white rounded-full h-[60px] px-6 mb-3 font-bold w-full flex items-center justify-center hover:opacity-70">
+                    Checkout
+                  </button>
+                </>,
+              ]}
               open={isModalCartOpen}
               onOk={handleOk}
               onCancel={handleCancel}
@@ -452,7 +491,10 @@ const ProductDetail = () => {
               <a onClick={showModal} className="font-bold underline">
                 View Product Details
               </a>
-              <ProductDetailModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+              <ProductDetailModal
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+              />
               <Collapse items={InfoItems} className="custom-collapse mt-10" />
             </div>
           </div>

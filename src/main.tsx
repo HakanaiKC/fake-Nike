@@ -9,6 +9,7 @@ import { AppProvider } from "./context/AppContext.tsx";
 import Layout from "./pages/Layout/index.tsx";
 import ProductDetail from "./pages/product/index.tsx";
 import { ProductListPage } from "./pages/productList/index.tsx";
+import CartPage from "./pages/cart/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,16 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "cart",
+        element: <CartPage />,
+      },
+    ],
+  }
 ]);
 
 createRoot(document.getElementById("root")!).render(

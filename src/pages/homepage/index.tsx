@@ -179,8 +179,8 @@ const HomepageComponent = () => {
             className="capitalize"
           >
             {shoesSlides.map((slide, index) => (
-              <Link to={`product/1`}>
-                <div key={index} className="slide p-2">
+              <Link to={`product/1`} key={index}>
+                <div className="slide p-2">
                   <img
                     src={slide.imgSrc}
                     alt={slide.alt}
