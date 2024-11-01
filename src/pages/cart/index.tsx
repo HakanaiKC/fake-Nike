@@ -2,8 +2,9 @@ import Carousel from "antd/es/carousel";
 import { Link } from "react-router-dom";
 import WhiteNike from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink.png";
 import { InterestedIcon } from "../../components/icons/IconSvg";
-import { Button, Col, InputNumber, Row } from "antd";
+import { Button, Tooltip } from "antd";
 import { useState } from "react";
+import { QuestionCircleFilled } from "@ant-design/icons";
 
 const shoesSlides = Array(6).fill({
   imgSrc: "https://picsum.photos/535/669",
@@ -12,6 +13,9 @@ const shoesSlides = Array(6).fill({
   description: "women's shoes",
   price: "4,109,000₫",
 });
+
+const text =
+  "The subtotal reflects the total price of your order, including taxes, before any applicable discounts. It does not include delivery costs and international transaction fees.";
 
 const CartPage = () => {
   const [value, setValue] = useState<number>(0);
@@ -29,7 +33,7 @@ const CartPage = () => {
   return (
     <>
       <div className="mt-9">
-        <main className="flex">
+        <div className="flex w-full justify-center">
           <div>
             <div className="border border-gray-400 p-3">
               <h2 className="text-xl text-[#FF5000] font-bold">
@@ -48,7 +52,7 @@ const CartPage = () => {
             </div>
             <div>
               <h2 className="capitalize text-2xl font-bold">bag</h2>
-              <div className="flex items-center">
+              <div className="flex items-start">
                 <div>
                   <img
                     src={WhiteNike}
@@ -63,39 +67,76 @@ const CartPage = () => {
                     Sequoia/Cargo Khaki/Medium Olive/White
                   </p>
                   <p className="text-gray-500">
-                    Size <span className="underline">5.5</span>
+                    Size <span className="underline cursor-pointer">5.5</span>
                   </p>
-                  <p className="text-gray-500 underline">Gift Options</p>
+                </div>
+                <div>
+                  <p className="font-bold">4,409,000₫</p>
                 </div>
               </div>
-              <div className="flex">
-                <div className="flex">
-                  <Button className="rounded-full" onClick={handleDecrement}>-</Button>
-                  <div className="border border-t-gray-300 border-b-gray-300">{value}</div>
-                  <Button className="rounded-full" onClick={handleIncrement}>+</Button>
+              <div className="flex gap-4 py-6 border-b border-gray-300">
+                <div className="flex items-center gap-2 border border-gray-300 rounded-full">
+                  <Button
+                    className="border-0 w-10 h-10 rounded-full hover:!bg-gray-300 hover:!text-black"
+                    onClick={handleDecrement}
+                  >
+                    -
+                  </Button>
+                  <div className="min-w-[20px] text-center">{value}</div>
+                  <Button
+                    className="border-0 w-10 h-10 rounded-full hover:!bg-gray-300 hover:!text-black"
+                    onClick={handleIncrement}
+                  >
+                    +
+                  </Button>
                 </div>
-                <div className="p-2 hover:bg-gray-300 rounded-full border border-gray-300">
+                <div className="p-2 rounded-full border border-gray-300 hover:bg-gray-300">
                   <InterestedIcon />
                 </div>
               </div>
             </div>
-            <div>
-              <h2 className="capitalize text-2xl font-bold">favourites</h2>
-              <p>
-                Want to view your favourites?{" "}
-                <Link to={"/register"} className="underline text-gray-500">
-                  Join us
-                </Link>{" "}
-                or{" "}
-                <Link to={"/login"} className="underline text-gray-500">
-                  Sign in
-                </Link>
-              </p>
-            </div>
+            <div className="mt-6">
+          <h2 className="capitalize text-2xl font-bold">favourites</h2>
+          <p>
+            Want to view your favourites?{" "}
+            <Link to={"/register"} className="underline text-gray-500">
+              Join us
+            </Link>{" "}
+            or{" "}
+            <Link to={"/login"} className="underline text-gray-500">
+              Sign in
+            </Link>
+          </p>
+        </div>
           </div>
-          <div></div>
-        </main>
+          <div>
+            <h2 className="capitalize text-2xl font-bold mt-6">Sumary</h2>
+            <div className="grid grid-cols-2 gap-y-2 py-4">
+  <div className="flex items-center">
+    <span>Subtotal</span>
+    <Tooltip placement="bottomRight" title={text} className="ml-2" color="rgb(88, 88, 88)">
+      <QuestionCircleFilled className="w-3"/>
+    </Tooltip>
+  </div>
+  <span className="text-right font-semibold">4,409,000₫</span>
+
+  <span>Estimated Delivery & Handling</span>
+  <span className="text-right font-semibold">250,000₫</span>
+
+  <div className="col-span-2 p-4 my-3 border border-y-gray-300">
+    <div className="flex justify-between">
+      <span className="font-bold">Total</span>
+      <span className="text-right font-bold">4,659,000₫</span>
+    </div>
+  </div>
+  
+</div>
+
+          </div>
+        </div>
+        
       </div>
+
       <div className="pt-20 px-12">
         <h2 className="capitalize text-2xl pb-6 mt-10">you might also like</h2>
         <Carousel
