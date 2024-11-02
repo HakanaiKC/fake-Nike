@@ -4,48 +4,37 @@ export enum ProductCategory {
   EASY_ON = "EasyOn",
 }
 
-interface Review {
-  rating: number;
-  comment: string;
-  date: string;
-  reviewerName: string;
-  reviewerEmail: string;
-}
-
-interface Dimensions {
-  width: number;
-  height: number;
-  depth: number;
-}
-
-interface Meta {
-  createdAt: string;
-  updatedAt: string;
-  barcode: string;
-  qrCode: string;
-}
-
 export interface Product {
+  box_condition: string;
+  brand_name: string;
+  category: string[];
+  collection_slugs: string[];
+  color: string;
+  designer: string;
+  details: string;
+  gender: string[];
+  grid_picture_url: string;
+  has_picture: boolean;
+  has_stock: boolean;
   id: number;
-  title: string;
-  description: string;
-  category: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  tags: string[];
-  brand: string;
+  keywords: string[];
+  main_picture_url: string;
+  midsole: string;
+  name: string;
+  nickname: string;
+  original_picture_url: string;
+  product_template_id: number;
+  release_date: string; // ISO date string
+  release_date_unix: number;
+  release_year: number;
+  retail_price_cents: number;
+  shoe_condition: string;
+  silhouette: string;
+  size_range: number[];
   sku: string;
-  weight: number;
-  dimensions: Dimensions;
-  warrantyInformation: string;
-  shippingInformation: string;
-  availabilityStatus: string;
-  reviews: Review[];
-  returnPolicy: string;
-  minimumOrderQuantity: number;
-  meta: Meta;
-  images: string[];
-  thumbnail: string;
+  slug: string;
+  status: string;
+  story_html: string;
+  upper_material: string;
 }
+

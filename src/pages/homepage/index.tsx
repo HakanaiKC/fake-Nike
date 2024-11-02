@@ -8,10 +8,13 @@ import V2k from "../../assets/img/v2k_shoes.png";
 import AirMax90 from "../../assets/img/air-max-90-lv8-shoes-5KhTdP.png";
 import NikeRunning from "../../assets/img/nike_running.jpg";
 import NikeMember from "../../assets/img/nike-member.jpg";
-import { ProductCategory } from "../../type/product-types";
+import { Product, ProductCategory } from "../../type/product-types";
 import { Link } from "react-router-dom";
-
-const Product = [
+import api from "../../api/api.json"
+import axios from "axios";
+import productsService from "../../services/productsService";
+import { useEffect, useState } from "react";
+const listProductStatus = [
   {
     imgUrl: Nike1,
     category: ProductCategory.JUST_IN,
@@ -29,30 +32,41 @@ const Product = [
   },
 ];
 const HomepageComponent = () => {
+  const [listNewestProducts, setListNewestProducts] = useState<Product[]>([]);
+  const [listSpotlightProducts, setListSpotlightProducts] = useState<Product[]>([]);
+  const [listProductByCategory, setListProductByCategory] = useState<Product[]>([]);
+  
+  const fetchNewestProduct = () => {
+    const rs = productsService.getNewestProduct();
+    setListNewestProducts(rs)
+  }
+  
+  const fetchSpotlightProduct = () => {
+    const rs = productsService.getBlackSpotlight();
+    setListSpotlightProducts(rs as Product[])
+  }
+
+  const fetchProductByCategory = () => {
+    const rs = productsService.getProductByCategory();
+    setListProductByCategory(rs as Product[])
+  }
+
+  useEffect(() => {
+    fetchNewestProduct()
+    fetchSpotlightProduct()
+    fetchProductByCategory()
+  }, [])
+
+  function formatPrice(priceCents:number) {
+    const priceDollars = priceCents / 100;
+    return `$${priceDollars.toFixed(2)}`;
+  }
+
   const membersSlides = Array(8).fill({
     imgSrc: NikeMember,
     alt: "Nike Member",
     title: "your exclusive access",
     description: "member product",
-  });
-
-  const sportSlides = Array(8).fill({
-    imgSrc: NikeRunning,
-    alt: "Nike Running",
-    buttonText: "running",
-  });
-
-  const vkSlides = Array(6).fill({
-    imgSrc: V2k,
-    alt: "V2K shoes",
-  });
-
-  const shoesSlides = Array(6).fill({
-    imgSrc: AirMax90,
-    alt: "AirMax90 shoes",
-    title: "nike air max 90 lv8",
-    description: "women's shoes",
-    price: "4,109,000₫",
   });
 
   const menuItems = [
@@ -147,7 +161,7 @@ const HomepageComponent = () => {
         <div className="pt-20 px-12">
           <h2 className="capitalize text-2xl pb-6">featured</h2>
           <div className="grid grid-cols-3 gap-4">
-            {Product.map((item, index) => (
+            {listProductStatus.map((item, index) => (
               <div className="relative" key={item.imgUrl + index}>
                 <div className="h-full w-full overflow-hidden">
                   <img
@@ -178,17 +192,17 @@ const HomepageComponent = () => {
             centerMode
             className="capitalize"
           >
-            {shoesSlides.map((slide, index) => (
+            {listNewestProducts.map((slide, index) => (
               <Link to={`product/1`} key={index}>
                 <div className="slide p-2">
                   <img
-                    src={slide.imgSrc}
-                    alt={slide.alt}
+                    src={slide.main_picture_url}
+                    alt={slide.nickname}
                     className="h-full w-full"
                   />
-                  <h4 className="pt-3 font-bold">{slide.title}</h4>
-                  <h5 className="text-gray-500">{slide.description}</h5>
-                  <h3 className="pt-2 font-bold">{slide.price}</h3>
+                  <h4 className="pt-3 font-bold">{slide.nickname}</h4>
+                  <h5 className="text-gray-500">{slide.name}</h5>
+                  <h3 className="pt-2 font-bold">{formatPrice(slide.retail_price_cents)}</h3>
                 </div>
               </Link>
             ))}
@@ -230,12 +244,12 @@ const HomepageComponent = () => {
             dots={false}
             centerMode
           >
-            {vkSlides.map((slide, index) => (
+            {listSpotlightProducts.map((slide, index) => (
               <div key={index} className="slide p-2">
                 <Link to={"/product/listproducts"}>
                   <img
-                    src={slide.imgSrc}
-                    alt={slide.alt}
+                    src={slide.main_picture_url}
+                    alt={slide.nickname}
                     className="h-full w-full"
                   />
                 </Link>
@@ -274,16 +288,16 @@ const HomepageComponent = () => {
             dots={false}
             centerMode
           >
-            {sportSlides.map((slide, index) => (
+            {listProductByCategory.map((slide, index) => (
               <div key={index} className="relative p-2">
                 <img
-                  src={slide.imgSrc}
-                  alt={slide.alt}
-                  className="h-full w-full"
+                  src={slide.main_picture_url}
+                  alt={slide.name}
+                  className="h-full w-full bg-gray-100"
                 />
                 <div className="absolute bottom-12 left-12">
                   <button className="bg-white text-black rounded-full capitalize px-4 py-1 font-bold">
-                    {slide.buttonText}
+                    {slide.category}
                   </button>
                 </div>
               </div>
