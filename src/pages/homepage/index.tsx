@@ -9,45 +9,64 @@ import AirMax90 from "../../assets/img/air-max-90-lv8-shoes-5KhTdP.png";
 import NikeRunning from "../../assets/img/nike_running.jpg";
 import NikeMember from "../../assets/img/nike-member.jpg";
 import { Product, ProductCategory } from "../../type/product-types";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import api from "../../api/api.json"
 import axios from "axios";
 import productsService from "../../services/productsService";
 import { useEffect, useState } from "react";
+import formatPrice from "../../utils/formatter";
 const listProductStatus = [
   {
     imgUrl: Nike1,
     category: ProductCategory.JUST_IN,
     name: "P6000",
+    status: "just_in",
   },
   {
     imgUrl: Nike2,
     category: ProductCategory.RUN_IN_RAIN,
     name: "Nike Pegasus 41 GORE-TEX",
+    status: 'run_in_the_rain'
   },
   {
     imgUrl: Nike3,
     category: ProductCategory.EASY_ON,
     name: "For playtime",
+    status: "easy_on"
   },
 ];
 const HomepageComponent = () => {
   const [listNewestProducts, setListNewestProducts] = useState<Product[]>([]);
   const [listSpotlightProducts, setListSpotlightProducts] = useState<Product[]>([]);
   const [listProductByCategory, setListProductByCategory] = useState<Product[]>([]);
-  
+  const [, setSearchParams] = useSearchParams();
+  const [, setSearchStatus] = useSearchParams();
+  const [, setSearchColor] = useSearchParams();
+
+  const updateSearchParams = (category: string[]) => {
+    setSearchParams({ category: category.join(',') });
+  };
+
+  const updateSearchStatus = (status: string) => {
+    setSearchStatus({ status: status });
+  };
+
+  const updateSearchColor = (color: string) => {
+    setSearchColor({ color: color });
+  };
+
   const fetchNewestProduct = () => {
     const rs = productsService.getNewestProduct();
     setListNewestProducts(rs)
   }
-  
+
   const fetchSpotlightProduct = () => {
     const rs = productsService.getBlackSpotlight();
     setListSpotlightProducts(rs as Product[])
   }
 
   const fetchProductByCategory = () => {
-    const rs = productsService.getProductByCategory();
+    const rs = productsService.getProductByCategory(["running"]);
     setListProductByCategory(rs as Product[])
   }
 
@@ -56,11 +75,6 @@ const HomepageComponent = () => {
     fetchSpotlightProduct()
     fetchProductByCategory()
   }, [])
-
-  function formatPrice(priceCents:number) {
-    const priceDollars = priceCents / 100;
-    return `$${priceDollars.toFixed(2)}`;
-  }
 
   const membersSlides = Array(8).fill({
     imgSrc: NikeMember,
@@ -162,7 +176,7 @@ const HomepageComponent = () => {
           <h2 className="capitalize text-2xl pb-6">featured</h2>
           <div className="grid grid-cols-3 gap-4">
             {listProductStatus.map((item, index) => (
-              <div className="relative" key={item.imgUrl + index}>
+              <div className="relative" key={item.imgUrl + index} onClick={() => updateSearchStatus(item.status)}>
                 <div className="h-full w-full overflow-hidden">
                   <img
                     src={item.imgUrl}
@@ -173,9 +187,11 @@ const HomepageComponent = () => {
                 <div className="absolute bottom-12 left-12">
                   <p className="pb-2 text-white">{item.category}</p>
                   <h3 className="pb-5 text-white text-xl">{item.name}</h3>
+                  <Link to={"/product/listproducts"}>
                   <button className="bg-white text-black rounded-full capitalize px-4 py-1">
                     shop
                   </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -192,8 +208,8 @@ const HomepageComponent = () => {
             centerMode
             className="capitalize"
           >
-            {listNewestProducts.map((slide, index) => (
-              <Link to={`product/1`} key={index}>
+            {listNewestProducts.map((slide) => (
+              <Link to={`product/${slide.id}`} key={slide.id}>
                 <div className="slide p-2">
                   <img
                     src={slide.main_picture_url}
@@ -245,7 +261,7 @@ const HomepageComponent = () => {
             centerMode
           >
             {listSpotlightProducts.map((slide, index) => (
-              <div key={index} className="slide p-2">
+              <div key={index} className="slide p-2" onClick={() => updateSearchColor(slide.color)}>
                 <Link to={"/product/listproducts"}>
                   <img
                     src={slide.main_picture_url}
@@ -289,17 +305,22 @@ const HomepageComponent = () => {
             centerMode
           >
             {listProductByCategory.map((slide, index) => (
-              <div key={index} className="relative p-2">
+              <div key={index} className="relative p-2" onClick={() => updateSearchParams(slide.category)}>
                 <img
                   src={slide.main_picture_url}
                   alt={slide.name}
                   className="h-full w-full bg-gray-100"
                 />
                 <div className="absolute bottom-12 left-12">
-                  <button className="bg-white text-black rounded-full capitalize px-4 py-1 font-bold">
-                    {slide.category}
-                  </button>
+                  {slide.category.map((item, index) => (
+                    <Link to={"/product/listproducts"} key={index + item}>
+                      <button className="bg-white text-black rounded-full capitalize px-4 py-1 font-bold mr-3" key={index + item}>
+                        {item}
+                      </button>
+                    </Link>
+                  ))}
                 </div>
+
               </div>
             ))}
           </Carousel>

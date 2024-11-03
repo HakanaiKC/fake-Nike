@@ -5,10 +5,11 @@ import { FilterIcon } from "../../components/icons/IconSvg";
 import { useEffect, useState } from "react";
 import productsService from "../../services/productsService";
 import { Product } from "../../type/product-types";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import "./index.css";
+import formatPrice from "../../utils/formatter";
 
-const typeOfShoesItems: MenuProps["items"] = [
+const items: MenuProps["items"] = [
   {
     key: "1",
     label: <a href="#">Featured</a>,
@@ -108,15 +109,35 @@ const shoesCategoriesItems: CollapseProps["items"] = [
 
 export const ProductListPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [searchParams] = useSearchParams();
+  const categories = searchParams.get('category')?.split(',') || [];
+  const status = searchParams.get('status') || ""
+  const color = searchParams.get('color') || ""
 
-  const getProductList = async () => {
-    const result = await productsService.getProducts();
-    setProducts(result.products);
+  const getProductListByCategory = () => {
+    const result = productsService.getProductByCategory(categories);
+    setProducts(result as Product[])
   };
 
+  const getProductByStatus = () => {
+    const rs = productsService.getProductByStatus(status);
+    setProducts(rs as Product[]);
+  }
+
+  const getProductByColor = () => {
+    const rs = productsService.getBlackSpotlight();
+    setProducts(rs as Product[]);
+  }
+
   useEffect(() => {
-    getProductList();
-  }, []);
+    if (categories.length > 0) {
+      getProductListByCategory();
+    } else if (status) {
+      getProductByStatus();
+    } else if (color){
+      getProductByColor()
+    }
+  }, [searchParams]);
 
   return (
     <section>
@@ -129,7 +150,7 @@ export const ProductListPage = () => {
               <p className="inline-flex gap-2">
                 Hide Filters <FilterIcon />
               </p>
-              <Dropdown items={typeOfShoesItems}>
+              <Dropdown menu={{items}}>
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
                     Sort By
@@ -142,11 +163,6 @@ export const ProductListPage = () => {
         </div>
         <div className="pt-5 grid grid-cols-12">
           <div className="col-span-2">
-            <div className="font-bold">
-              <p className="leading-[2]">Mid Top</p>
-              <p className="leading-[2]">High Top</p>
-              <p className="leading-[2]">Low Top</p>
-            </div>
             <Collapse
               items={shoesCategoriesItems}
               className="custom-collapse mt-10"
@@ -154,17 +170,17 @@ export const ProductListPage = () => {
           </div>
           <div className="col-span-10 grid grid-cols-3 gap-3 ml-10">
             {products &&
-              products.map((product, index) => (
-                <Link to={`/product/${product.id}`} key={product.id + index}>
+              products.map((product) => (
+                <Link to={`/product/${product.id}`} key={product.id}>
                   <div className="slide p-2">
                     <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      className="h-[350px] w-[350px]"
+                      src={product.main_picture_url}
+                      alt={product.name}
+                      className="h-[350px] w-[350px] object-contain"
                     />
-                    <h4 className="pt-3 font-bold">{product.title}</h4>
-                    <h5 className="text-gray-500">{product.description}</h5>
-                    <h3 className="pt-2 font-bold">{product.price}$</h3>
+                    <h4 className="pt-3 font-bold">{product.name}</h4>
+                    <h5 className="text-gray-500">{product.details}</h5>
+                    <h3 className="pt-2 font-bold">{formatPrice(product.retail_price_cents)}</h3>
                   </div>
                 </Link>
               ))}

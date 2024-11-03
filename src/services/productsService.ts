@@ -5,16 +5,6 @@ const getProducts = async () => {
   return res.data;
 };
 
-const getSingleProduct = async (id: string) => {
-  const res = await axiosInstance.get("products/" + id);
-  return res.data;
-};
-
-const getListProduct = () => {
-  const res = api;
-  return res
-}
-
 const getProductById = (id: number) => {
   const res = api.sneakers.find(item => item.id === id)
   return res
@@ -45,11 +35,18 @@ const getBlackSpotlight = () => {
   return blackSpotlightShoes
 }
 
-const getProductByCategory=()=>{
-  const shoesByCategory = api.sneakers.filter((item) => item.category.some(category=>category==="running") )
-  console.log(shoesByCategory);
-  return shoesByCategory
-  
-}
+const getProductByCategory = (shoesCategory: string[]) => {
+  const shoesByCategory = api.sneakers.filter((item) => 
+    item.category.some((category) => shoesCategory.includes(category))
+  );
+  return shoesByCategory;
+};
 
-export default { getProducts, getSingleProduct, getListProduct, getProductById, getNewestProduct, getBlackSpotlight,getProductByCategory };
+const getProductByStatus = (status: string) => {
+  const shoesByCategory = api.sneakers.filter((item) => 
+    item.status === status
+  );
+  return shoesByCategory;
+};
+
+export default { getProducts, getProductById, getNewestProduct, getBlackSpotlight,getProductByCategory,getProductByStatus };

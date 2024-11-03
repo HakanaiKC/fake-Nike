@@ -8,8 +8,8 @@ import {
   Space,
 } from "antd";
 import { InterestedIcon } from "../../components/icons/IconSvg";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import shoesPink1 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink.png";
 import shoesPink2 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-1.png";
 import shoesPink3 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-2.png";
@@ -35,6 +35,9 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import ProductDetailModal from "../../components/Modal/ProductDetailModal";
+import { Product } from "../../type/product-types";
+import productsService from "../../services/productsService";
+import formatPrice from "../../utils/formatter";
 
 interface ImageColor {
   id: string;
@@ -121,19 +124,6 @@ const ListImagesShoesWhite = [
   },
 ];
 
-const ListSizes = [
-  { id: 1, size: "EU 35.5" },
-  { id: 2, size: "EU 36" },
-  { id: 3, size: "EU 36.5" },
-  { id: 4, size: "EU 37" },
-  { id: 5, size: "EU 37.5" },
-  { id: 6, size: "EU 38" },
-  { id: 7, size: "EU 38.5" },
-  { id: 8, size: "EU 39" },
-  { id: 9, size: "EU 39.5" },
-  { id: 10, size: "EU 40" },
-];
-
 const ListImagesColor = [
   {
     id: "item-image-1",
@@ -209,9 +199,7 @@ const InfoItems: CollapseProps["items"] = [
 ];
 
 const ProductDetail = () => {
-  const [activeProductColor, setActiveProductColor] = useState<string>(
-    ListImagesColor[0].id
-  );
+  const [activeProductColor, setActiveProductColor] = useState<string>("");
   const [listImages, setListImages] = useState<ImageColor>(ListImagesColor[0]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCartOpen, setIsModalCartOpen] = useState(false);
@@ -220,13 +208,21 @@ const ProductDetail = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const handleClickGetListActive = (image: ImageColor) => {
-    setActiveProductColor(image.id);
-    const selectedList = ListImagesColor.find(
-      (item) => item.color === image.color
-    );
-    setListImages(selectedList!);
-    setCurrentImageIndex(selectedList!.imgList[0].id);
+  const params = useParams()
+  const [productDetails, setProductDetails] = useState<Product>()
+
+  const getProductDetails = () => {
+    const productId = Number(params.productId)
+    const rs = productsService.getProductById(productId)
+    setProductDetails(rs as Product);
+  }
+
+  useEffect(() => {
+    getProductDetails()
+  }, [params.productId])
+
+  const handleClickGetListActive = (image: Product) => {
+    setActiveProductColor(image.color);
   };
 
   const handleOk = () => {
@@ -309,7 +305,7 @@ const ProductDetail = () => {
       <main className="p-12">
         <div className="grid grid-cols-12">
           <div className="col-span-2 flex flex-col gap-2 justify-start h-full items-end mr-4">
-            {listImages &&
+            {/* {listImages &&
               listImages.imgList.map((img, index) => (
                 <div
                   className="relative overflow-hidden bg-cover bg-no-repeat"
@@ -322,21 +318,35 @@ const ProductDetail = () => {
                   />
                   <div
                     onMouseEnter={() => handleHoverOnImage(index)}
-                    className={`${
-                      currentImageIndex === index ? "opacity-40" : ""
-                    }
+                    className={`${currentImageIndex === index ? "opacity-40" : ""
+                      }
                     absolute bottom-0 left-0 right-0 top-0 h-[60px] w-[60px] overflow-hidden bg-gray-300 bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-40`}
                   ></div>
                 </div>
-              ))}
+              ))} */}
+            {productDetails && (
+              <div
+                className="relative overflow-hidden bg-cover bg-no-repeat"
+                key={productDetails.id}
+              >
+                <img
+                  src={productDetails.grid_picture_url}
+                  className="w-[60px] h-[60px] rounded bg-gray-100"
+                  alt={productDetails.nickname}
+                />
+                <div
+                  className={`absolute bottom-0 left-0 right-0 top-0 h-[60px] w-[60px] overflow-hidden bg-gray-300 bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-40`}></div>
+              </div>
+            )}
           </div>
           <div className="col-span-5">
             <div>
               <div className="relative">
                 <img
-                  src={listImages.imgList[currentImageIndex].imgUrl}
+                  // src={listImages.imgList[currentImageIndex].imgUrl}
+                  src={productDetails?.original_picture_url}
                   alt={`Lorem Ipsum`}
-                  className="rounded"
+                  className="rounded bg-gray-100"
                 />
                 <div className="absolute right-6 bottom-6">
                   <Button
@@ -358,17 +368,16 @@ const ProductDetail = () => {
             </div>
           </div>
           <div className="col-span-4 ml-6 max-w-[400px]">
-            <h1 className="text-xl">Nike Cortez Textile</h1>
-            <h2 className="text-gray-500">Women's Shoes</h2>
-            <span>2,999,900₫</span>
+            <h1 className="text-xl">{productDetails?.name}</h1>
+            <h2 className="text-gray-500">{productDetails?.details}</h2>
+            <span>{productDetails && formatPrice(productDetails.retail_price_cents)}</span>
             <div className="mt-8 flex flex-row gap-3">
-              {ListImagesColor.map((image) => (
+              {/* {ListImagesColor.map((image) => (
                 <div
-                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${
-                    activeProductColor === image.id
-                      ? "border-2 border-black"
-                      : ""
-                  }`}
+                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${activeProductColor === image.id
+                    ? "border-2 border-black"
+                    : ""
+                    }`}
                   key={image.id}
                   onClick={() => handleClickGetListActive(image)}
                 >
@@ -378,7 +387,23 @@ const ProductDetail = () => {
                     alt="Sample"
                   />
                 </div>
-              ))}
+              ))} */}
+              {productDetails && (
+                <div
+                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${activeProductColor === productDetails.color
+                    ? "border-2 border-black"
+                    : ""
+                    }`}
+                  key={productDetails.id}
+                  onClick={() => handleClickGetListActive(productDetails)}
+                >
+                  <img
+                    src={productDetails.grid_picture_url}
+                    className="rounded w-[70px] h-w-[70px] object-contain bg-gray-100"
+                    alt={productDetails.nickname}
+                  />
+                </div>
+              )}
             </div>
             <div className="mt-8 mb-8">
               <div className="flex flex-row justify-between items-center">
@@ -410,15 +435,14 @@ const ProductDetail = () => {
                 </a>
               </div>
               <div className="grid grid-cols-5 gap-2 mt-3">
-                {ListSizes.map((size, index) => (
+                {productDetails && productDetails.size_range.map((size, index) => (
                   <div
-                    className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${
-                      selectedSize === size.id ? "!border-black" : ""
-                    }`}
-                    key={index + size.size}
-                    onClick={() => handleSelectSize(size.id)}
+                    className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${selectedSize === size ? "!border-black" : ""
+                      }`}
+                    key={index}
+                    onClick={() => handleSelectSize(size)}
                   >
-                    <p className="text-center">{size.size}</p>
+                    <p className="text-center">{size}</p>
                   </div>
                 ))}
               </div>
@@ -524,8 +548,8 @@ const ProductDetail = () => {
             className="capitalize"
           >
             {shoesSlides.map((slide, index) => (
-              <Link to={`/`}>
-                <div key={index} className="slide p-2">
+              <Link to={`/`} key={slide + index}>
+                <div className="slide p-2">
                   <img
                     src={slide.imgSrc}
                     alt={slide.alt}
