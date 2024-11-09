@@ -10,27 +10,8 @@ import {
 import { InterestedIcon } from "../../components/icons/IconSvg";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import shoesPink1 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink.png";
-import shoesPink2 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-1.png";
-import shoesPink3 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-2.png";
-import shoesPink4 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-3.png";
-import shoesPink5 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-4.png";
-import shoesPink6 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-5.png";
-import shoesPink7 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-6.png";
-import shoesPink8 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-7.png";
-import shoesPink9 from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink-8.png";
-import shoesWhite1 from "../../assets/img/shoes White/W+NIKE+CORTEZ White.png";
-import shoesWhite2 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-1.png";
-import shoesWhite3 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-2.png";
-import shoesWhite4 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-3.png";
-import shoesWhite5 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-4.png";
-import shoesWhite6 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-5.png";
-import shoesWhite7 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-6.png";
-import shoesWhite8 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-7.png";
-import shoesWhite9 from "../../assets/img/shoes White/W+NIKE+CORTEZ White-8.png";
 import {
   CheckCircleFilled,
-  CheckCircleOutlined,
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
@@ -38,106 +19,6 @@ import ProductDetailModal from "../../components/Modal/ProductDetailModal";
 import { Product } from "../../type/product-types";
 import productsService from "../../services/productsService";
 import formatPrice from "../../utils/formatter";
-
-interface ImageColor {
-  id: string;
-  imgUrl: string;
-  color: string;
-  imgList: { imgUrl: string; id: number }[];
-}
-
-const ListImagesShoesPink = [
-  {
-    id: 1,
-    imgUrl: shoesPink1,
-  },
-  {
-    id: 2,
-    imgUrl: shoesPink2,
-  },
-  {
-    id: 3,
-    imgUrl: shoesPink3,
-  },
-  {
-    id: 4,
-    imgUrl: shoesPink4,
-  },
-  {
-    id: 5,
-    imgUrl: shoesPink5,
-  },
-  {
-    id: 6,
-    imgUrl: shoesPink6,
-  },
-  {
-    id: 7,
-    imgUrl: shoesPink7,
-  },
-  {
-    id: 8,
-    imgUrl: shoesPink8,
-  },
-  {
-    id: 9,
-    imgUrl: shoesPink9,
-  },
-];
-
-const ListImagesShoesWhite = [
-  {
-    id: 1,
-    imgUrl: shoesWhite1,
-  },
-  {
-    id: 2,
-    imgUrl: shoesWhite2,
-  },
-  {
-    id: 3,
-    imgUrl: shoesWhite3,
-  },
-  {
-    id: 4,
-    imgUrl: shoesWhite4,
-  },
-  {
-    id: 5,
-    imgUrl: shoesWhite5,
-  },
-  {
-    id: 6,
-    imgUrl: shoesWhite6,
-  },
-  {
-    id: 7,
-    imgUrl: shoesWhite7,
-  },
-  {
-    id: 8,
-    imgUrl: shoesWhite8,
-  },
-  {
-    id: 9,
-    imgUrl: shoesWhite9,
-  },
-];
-
-const ListImagesColor = [
-  {
-    id: "item-image-1",
-    imgUrl: shoesPink1,
-    color: "pink",
-    imgList: ListImagesShoesPink,
-  },
-  {
-    id: "item-image-2",
-    imgUrl: shoesWhite1,
-    color: "black",
-    imgList: ListImagesShoesWhite,
-  },
-];
 
 const shoesSlides = Array(6).fill({
   imgSrc: "https://picsum.photos/535/669",
@@ -200,26 +81,25 @@ const InfoItems: CollapseProps["items"] = [
 
 const ProductDetail = () => {
   const [activeProductColor, setActiveProductColor] = useState<string>("");
-  const [listImages, setListImages] = useState<ImageColor>(ListImagesColor[0]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCartOpen, setIsModalCartOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<number>();
   const [isSelectedSize, setIsSelectedSize] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageId, setCurrentImageId] = useState(0);
 
-  const params = useParams()
-  const [productDetails, setProductDetails] = useState<Product>()
+  const params = useParams();
+  const [productDetails, setProductDetails] = useState<Product>();
 
   const getProductDetails = () => {
-    const productId = Number(params.productId)
-    const rs = productsService.getProductById(productId)
+    const productId = Number(params.productId);
+    const rs = productsService.getProductById(productId);
     setProductDetails(rs as Product);
-  }
+  };
 
   useEffect(() => {
-    getProductDetails()
-  }, [params.productId])
+    getProductDetails();
+  }, [params.productId]);
 
   const handleClickGetListActive = (image: Product) => {
     setActiveProductColor(image.color);
@@ -240,7 +120,7 @@ const ProductDetail = () => {
   };
 
   const handleHoverOnImage = (index: number) => {
-    setCurrentImageIndex(index);
+    setCurrentImageId(index);
   };
 
   const handleAddToCart = () => {
@@ -252,17 +132,17 @@ const ProductDetail = () => {
     }
   };
 
-  const nextImage = () => {
-    setCurrentImageIndex(
-      (prevIndex) => (prevIndex + 1) % listImages.imgList.length
-    );
-  };
+  // const nextImage = () => {
+  //   setCurrentImageId(
+  //     (prevIndex) => (prevIndex + 1) % listImages.imgList.length
+  //   );
+  // };
 
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? listImages.imgList.length - 1 : prevIndex - 1
-    );
-  };
+  // const prevImage = () => {
+  //   setCurrentImageId((prevIndex) =>
+  //     prevIndex === 0 ? listImages.imgList.length - 1 : prevIndex - 1
+  //   );
+  // };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -335,7 +215,12 @@ const ProductDetail = () => {
                   alt={productDetails.nickname}
                 />
                 <div
-                  className={`absolute bottom-0 left-0 right-0 top-0 h-[60px] w-[60px] overflow-hidden bg-gray-300 bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-40`}></div>
+                  onMouseEnter={() => handleHoverOnImage(productDetails.id)}
+                  className={`${
+                    currentImageId === productDetails.id ? "opacity-40" : ""
+                  }
+                    absolute bottom-0 left-0 right-0 top-0 h-[60px] w-[60px] overflow-hidden bg-gray-300 bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-40`}
+                ></div>
               </div>
             )}
           </div>
@@ -350,14 +235,14 @@ const ProductDetail = () => {
                 />
                 <div className="absolute right-6 bottom-6">
                   <Button
-                    onClick={prevImage}
+                    // onClick={prevImage}
                     shape="circle"
                     className="mr-2 !border-white h-[36px] w-[36px]"
                   >
                     <LeftOutlined />
                   </Button>
                   <Button
-                    onClick={nextImage}
+                    // onClick={nextImage}
                     shape="circle"
                     className="!border-white h-[36px] w-[36px]"
                   >
@@ -370,7 +255,9 @@ const ProductDetail = () => {
           <div className="col-span-4 ml-6 max-w-[400px]">
             <h1 className="text-xl">{productDetails?.name}</h1>
             <h2 className="text-gray-500">{productDetails?.details}</h2>
-            <span>{productDetails && formatPrice(productDetails.retail_price_cents)}</span>
+            <span>
+              {productDetails && formatPrice(productDetails.retail_price_cents)}
+            </span>
             <div className="mt-8 flex flex-row gap-3">
               {/* {ListImagesColor.map((image) => (
                 <div
@@ -390,10 +277,11 @@ const ProductDetail = () => {
               ))} */}
               {productDetails && (
                 <div
-                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${activeProductColor === productDetails.color
-                    ? "border-2 border-black"
-                    : ""
-                    }`}
+                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${
+                    activeProductColor === productDetails.color
+                      ? "border-2 border-black"
+                      : ""
+                  }`}
                   key={productDetails.id}
                   onClick={() => handleClickGetListActive(productDetails)}
                 >
@@ -435,16 +323,18 @@ const ProductDetail = () => {
                 </a>
               </div>
               <div className="grid grid-cols-5 gap-2 mt-3">
-                {productDetails && productDetails.size_range.map((size, index) => (
-                  <div
-                    className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${selectedSize === size ? "!border-black" : ""
+                {productDetails &&
+                  productDetails.size_range.map((size, index) => (
+                    <div
+                      className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${
+                        selectedSize === size ? "!border-black" : ""
                       }`}
-                    key={index}
-                    onClick={() => handleSelectSize(size)}
-                  >
-                    <p className="text-center">{size}</p>
-                  </div>
-                ))}
+                      key={index}
+                      onClick={() => handleSelectSize(size)}
+                    >
+                      <p className="text-center">{size}</p>
+                    </div>
+                  ))}
               </div>
               <p className="text-red-700 mt-3">{errorMessage}</p>
             </div>

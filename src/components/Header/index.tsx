@@ -50,27 +50,33 @@ export const Header = () => {
         </div>
 
         <nav className="col-span-7 flex justify-center font-bold space-x-3">
-          <a href="#" className="px-3">
-            New & Featured
-          </a>
-          <a href="#" className="px-3">
+          <Link to={`/product/listproducts?gender=men`} className="px-3">
             Men
-          </a>
-          <a href="#" className="px-3">
+          </Link>
+          <Link to={`/product/listproducts?gender=women`} className="px-3">
             Women
-          </a>
-          <a href="#" className="px-3">
+          </Link>
+          <Link to={`/product/listproducts?gender=youth`} className="px-3">
             Kids
-          </a>
-          <a href="#" className="px-3">
-            Sale
-          </a>
-          <a href="#" className="px-3">
-            Customise
-          </a>
-          <a href="#" className="">
-            SNKRS
-          </a>
+          </Link>
+          <Link
+            to={`/product/listproducts?category=basketball`}
+            className="px-3"
+          >
+            Basketball
+          </Link>
+          <Link
+            to={`/product/listproducts?category=lifestyle`}
+            className="px-3"
+          >
+            Lifestyle
+          </Link>
+          <Link
+            to={`/product/listproducts?category=skateboarding`}
+            className="px-3"
+          >
+            Skateboarding
+          </Link>
         </nav>
 
         <div className="col-span-3 flex items-center justify-end gap-4">

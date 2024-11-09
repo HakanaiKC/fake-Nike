@@ -1,52 +1,63 @@
-import axiosInstance from "../config/axiosClient";
-import api from "../api/api.json"
-const getProducts = async () => {
-  const res = await axiosInstance.get("products");
-  return res.data;
-};
+import api from "../api/api.json";
 
 const getProductById = (id: number) => {
-  const res = api.sneakers.find(item => item.id === id)
-  return res
-}
+  const res = api.sneakers.find((item) => item.id === id);
+  return res;
+};
 
 const getNewestProduct = () => {
-  const releaseDateArray = api.sneakers.map(item => {
+  const releaseDateArray = api.sneakers.map((item) => {
     if (item.release_date) {
-      const timestamp = Date.parse(item.release_date)
-      return ({ ...item, release_date: timestamp })
-    }
-  })
-
-  const sortedTime = releaseDateArray.sort((a: any, b: any) => b.release_date - a.release_date)
-  const newestProductDate = sortedTime.map((item: any) => {
-    if (item) {
-      const rs = new Date(item.release_date).toDateString()
-      const sortedProductByReleaseDate = { ...item, release_date: rs }
-      return sortedProductByReleaseDate
+      const timestamp = Date.parse(item.release_date);
+      return { ...item, release_date: timestamp };
     }
   });
 
-  return newestProductDate.slice(0, 10)
-}
+  const sortedTime = releaseDateArray.sort(
+    (a: any, b: any) => b.release_date - a.release_date
+  );
+  const newestProductDate = sortedTime.map((item: any) => {
+    if (item) {
+      const rs = new Date(item.release_date).toDateString();
+      const sortedProductByReleaseDate = { ...item, release_date: rs };
+      return sortedProductByReleaseDate;
+    }
+  });
+
+  return newestProductDate.slice(0, 10);
+};
 
 const getBlackSpotlight = () => {
-  const blackSpotlightShoes = api.sneakers.filter((item) => item.color === "Black")
-  return blackSpotlightShoes
-}
+  const blackSpotlightShoes = api.sneakers.filter(
+    (item) => item.color === "Black"
+  );
+  return blackSpotlightShoes;
+};
 
 const getProductByCategory = (shoesCategory: string[]) => {
-  const shoesByCategory = api.sneakers.filter((item) => 
+  const shoesByCategory = api.sneakers.filter((item) =>
     item.category.some((category) => shoesCategory.includes(category))
   );
   return shoesByCategory;
 };
 
-const getProductByStatus = (status: string) => {
-  const shoesByCategory = api.sneakers.filter((item) => 
-    item.status === status
+const getProductByGender = (shoesGender: string[]) => {
+  const shoesByCategory = api.sneakers.filter((item) =>
+    item.gender.some((gender) => shoesGender.includes(gender))
   );
   return shoesByCategory;
 };
 
-export default { getProducts, getProductById, getNewestProduct, getBlackSpotlight,getProductByCategory,getProductByStatus };
+const getProductByStatus = (status: string) => {
+  const shoesByCategory = api.sneakers.filter((item) => item.status === status);
+  return shoesByCategory;
+};
+
+export default {
+  getProductById,
+  getNewestProduct,
+  getBlackSpotlight,
+  getProductByCategory,
+  getProductByStatus,
+  getProductByGender,
+};

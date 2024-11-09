@@ -4,14 +4,9 @@ import Nike1 from "../../assets/img/nike-just-do-it.jpg";
 import Nike2 from "../../assets/img/nike-just-do-it.jfif";
 import Nike3 from "../../assets/img/image.jfif";
 import Nike4 from "../../assets/img/nike-just-do-it-2.jpg";
-import V2k from "../../assets/img/v2k_shoes.png";
-import AirMax90 from "../../assets/img/air-max-90-lv8-shoes-5KhTdP.png";
-import NikeRunning from "../../assets/img/nike_running.jpg";
 import NikeMember from "../../assets/img/nike-member.jpg";
 import { Product, ProductCategory } from "../../type/product-types";
 import { Link, useSearchParams } from "react-router-dom";
-import api from "../../api/api.json"
-import axios from "axios";
 import productsService from "../../services/productsService";
 import { useEffect, useState } from "react";
 import formatPrice from "../../utils/formatter";
@@ -26,25 +21,29 @@ const listProductStatus = [
     imgUrl: Nike2,
     category: ProductCategory.RUN_IN_RAIN,
     name: "Nike Pegasus 41 GORE-TEX",
-    status: 'run_in_the_rain'
+    status: "run_in_the_rain",
   },
   {
     imgUrl: Nike3,
     category: ProductCategory.EASY_ON,
     name: "For playtime",
-    status: "easy_on"
+    status: "easy_on",
   },
 ];
 const HomepageComponent = () => {
   const [listNewestProducts, setListNewestProducts] = useState<Product[]>([]);
-  const [listSpotlightProducts, setListSpotlightProducts] = useState<Product[]>([]);
-  const [listProductByCategory, setListProductByCategory] = useState<Product[]>([]);
+  const [listSpotlightProducts, setListSpotlightProducts] = useState<Product[]>(
+    []
+  );
+  const [listProductByCategory, setListProductByCategory] = useState<Product[]>(
+    []
+  );
   const [, setSearchParams] = useSearchParams();
   const [, setSearchStatus] = useSearchParams();
   const [, setSearchColor] = useSearchParams();
 
   const updateSearchParams = (category: string[]) => {
-    setSearchParams({ category: category.join(',') });
+    setSearchParams({ category: category.join(",") });
   };
 
   const updateSearchStatus = (status: string) => {
@@ -57,24 +56,24 @@ const HomepageComponent = () => {
 
   const fetchNewestProduct = () => {
     const rs = productsService.getNewestProduct();
-    setListNewestProducts(rs)
-  }
+    setListNewestProducts(rs);
+  };
 
   const fetchSpotlightProduct = () => {
     const rs = productsService.getBlackSpotlight();
-    setListSpotlightProducts(rs as Product[])
-  }
+    setListSpotlightProducts(rs as Product[]);
+  };
 
   const fetchProductByCategory = () => {
     const rs = productsService.getProductByCategory(["running"]);
-    setListProductByCategory(rs as Product[])
-  }
+    setListProductByCategory(rs as Product[]);
+  };
 
   useEffect(() => {
-    fetchNewestProduct()
-    fetchSpotlightProduct()
-    fetchProductByCategory()
-  }, [])
+    fetchNewestProduct();
+    fetchSpotlightProduct();
+    fetchProductByCategory();
+  }, []);
 
   const membersSlides = Array(8).fill({
     imgSrc: NikeMember,
@@ -176,7 +175,11 @@ const HomepageComponent = () => {
           <h2 className="capitalize text-2xl pb-6">featured</h2>
           <div className="grid grid-cols-3 gap-4">
             {listProductStatus.map((item, index) => (
-              <div className="relative" key={item.imgUrl + index} onClick={() => updateSearchStatus(item.status)}>
+              <div
+                className="relative"
+                key={item.imgUrl + index}
+                onClick={() => updateSearchStatus(item.status)}
+              >
                 <div className="h-full w-full overflow-hidden">
                   <img
                     src={item.imgUrl}
@@ -188,9 +191,9 @@ const HomepageComponent = () => {
                   <p className="pb-2 text-white">{item.category}</p>
                   <h3 className="pb-5 text-white text-xl">{item.name}</h3>
                   <Link to={"/product/listproducts"}>
-                  <button className="bg-white text-black rounded-full capitalize px-4 py-1">
-                    shop
-                  </button>
+                    <button className="bg-white text-black rounded-full capitalize px-4 py-1">
+                      shop
+                    </button>
                   </Link>
                 </div>
               </div>
@@ -218,7 +221,9 @@ const HomepageComponent = () => {
                   />
                   <h4 className="pt-3 font-bold">{slide.nickname}</h4>
                   <h5 className="text-gray-500">{slide.name}</h5>
-                  <h3 className="pt-2 font-bold">{formatPrice(slide.retail_price_cents)}</h3>
+                  <h3 className="pt-2 font-bold">
+                    {formatPrice(slide.retail_price_cents)}
+                  </h3>
                 </div>
               </Link>
             ))}
@@ -261,7 +266,11 @@ const HomepageComponent = () => {
             centerMode
           >
             {listSpotlightProducts.map((slide, index) => (
-              <div key={index} className="slide p-2" onClick={() => updateSearchColor(slide.color)}>
+              <div
+                key={index}
+                className="slide p-2"
+                onClick={() => updateSearchColor(slide.color)}
+              >
                 <Link to={"/product/listproducts"}>
                   <img
                     src={slide.main_picture_url}
@@ -305,7 +314,11 @@ const HomepageComponent = () => {
             centerMode
           >
             {listProductByCategory.map((slide, index) => (
-              <div key={index} className="relative p-2" onClick={() => updateSearchParams(slide.category)}>
+              <div
+                key={index}
+                className="relative p-2"
+                onClick={() => updateSearchParams(slide.category)}
+              >
                 <img
                   src={slide.main_picture_url}
                   alt={slide.name}
@@ -314,13 +327,15 @@ const HomepageComponent = () => {
                 <div className="absolute bottom-12 left-12">
                   {slide.category.map((item, index) => (
                     <Link to={"/product/listproducts"} key={index + item}>
-                      <button className="bg-white text-black rounded-full capitalize px-4 py-1 font-bold mr-3" key={index + item}>
+                      <button
+                        className="bg-white text-black rounded-full capitalize px-4 py-1 font-bold mr-3"
+                        key={index + item}
+                      >
                         {item}
                       </button>
                     </Link>
                   ))}
                 </div>
-
               </div>
             ))}
           </Carousel>

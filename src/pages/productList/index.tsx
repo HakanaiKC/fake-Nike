@@ -8,6 +8,7 @@ import { Product } from "../../type/product-types";
 import { Link, useSearchParams } from "react-router-dom";
 import "./index.css";
 import formatPrice from "../../utils/formatter";
+import api from "../../api/api.json";
 
 const items: MenuProps["items"] = [
   {
@@ -110,33 +111,46 @@ const shoesCategoriesItems: CollapseProps["items"] = [
 export const ProductListPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchParams] = useSearchParams();
-  const categories = searchParams.get('category')?.split(',') || [];
-  const status = searchParams.get('status') || ""
-  const color = searchParams.get('color') || ""
+  const categories = searchParams.get("category")?.split(",") || [];
+  const genders = searchParams.get("gender")?.split(",") || [];
+  const status = searchParams.get("status") || "";
+  const color = searchParams.get("color") || "";
+
+  const getProductListByGender = () => {
+    const result = productsService.getProductByGender(genders);
+    setProducts(result as Product[]);
+  };
 
   const getProductListByCategory = () => {
     const result = productsService.getProductByCategory(categories);
-    setProducts(result as Product[])
+    setProducts(result as Product[]);
   };
 
   const getProductByStatus = () => {
     const rs = productsService.getProductByStatus(status);
     setProducts(rs as Product[]);
-  }
+  };
 
   const getProductByColor = () => {
     const rs = productsService.getBlackSpotlight();
     setProducts(rs as Product[]);
-  }
+  };
+
+  const getNewestProduct = () => {
+    const rs = api.sneakers.map((category) => category.category);
+    console.log(rs);
+  };
+
+  const fetchProducts = () => {
+    if (categories.length > 0) return getProductListByCategory();
+    if (status) return getProductByStatus();
+    if (color) return getProductByColor();
+    if (genders) return getProductListByGender();
+  };
 
   useEffect(() => {
-    if (categories.length > 0) {
-      getProductListByCategory();
-    } else if (status) {
-      getProductByStatus();
-    } else if (color){
-      getProductByColor()
-    }
+    fetchProducts();
+    getNewestProduct();
   }, [searchParams]);
 
   return (
@@ -150,7 +164,7 @@ export const ProductListPage = () => {
               <p className="inline-flex gap-2">
                 Hide Filters <FilterIcon />
               </p>
-              <Dropdown menu={{items}}>
+              <Dropdown menu={{ items }}>
                 <a onClick={(e) => e.preventDefault()}>
                   <Space>
                     Sort By
@@ -180,7 +194,9 @@ export const ProductListPage = () => {
                     />
                     <h4 className="pt-3 font-bold">{product.name}</h4>
                     <h5 className="text-gray-500">{product.details}</h5>
-                    <h3 className="pt-2 font-bold">{formatPrice(product.retail_price_cents)}</h3>
+                    <h3 className="pt-2 font-bold">
+                      {formatPrice(product.retail_price_cents)}
+                    </h3>
                   </div>
                 </Link>
               ))}
