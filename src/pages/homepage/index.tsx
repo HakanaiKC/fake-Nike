@@ -56,7 +56,7 @@ const HomepageComponent = () => {
 
   const fetchNewestProduct = () => {
     const rs = productsService.getNewestProduct();
-    setListNewestProducts(rs);
+    setListNewestProducts(rs.slice(0, 10));
   };
 
   const fetchSpotlightProduct = () => {

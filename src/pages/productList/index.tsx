@@ -9,7 +9,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import "./index.css";
 import formatPrice from "../../utils/formatter";
 
-const GENDER_FILTER = ['men', 'women', 'youth']
+const GENDER_FILTER = ["men", "women", "youth"];
 
 export const ProductListPage = () => {
   const [searchParams] = useSearchParams();
@@ -17,27 +17,48 @@ export const ProductListPage = () => {
   const genders = searchParams.get("gender")?.split(",") || [];
   const status = searchParams.get("status") || "";
   const color = searchParams.get("color") || "";
+  const [products, setProducts] = useState<Product[]>([]);
+  const [gendersFilter, setGendersFilter] = useState<string[]>(genders);
+
+  const handleSortShoesByPrice = (
+    products: Product[],
+    sortAscending: boolean
+  ) => {
+    const rs = productsService.sortProductsByPrice(products, sortAscending);
+    setProducts(rs);
+  };
+
+  const getNewestProduct = () => {
+    const rs = productsService.getNewestProduct();
+    setProducts(rs.slice(0, 10) as Product[]);
+  };
+
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <a href="#">Featured</a>,
+      label: (
+        <a href="#" onClick={getNewestProduct}>
+          Newest
+        </a>
+      ),
     },
     {
       key: "2",
-      label: <a href="#">Newest</a>,
+      label: (
+        <a href="#" onClick={() => handleSortShoesByPrice(products, false)}>
+          Price: High-Low
+        </a>
+      ),
     },
     {
       key: "3",
-      label: <a href="#">Price: High-Low</a>,
-    },
-    {
-      key: "4",
-      label: <a href="#">Price: Low-High</a>,
+      label: (
+        <a href="#" onClick={() => handleSortShoesByPrice(products, true)}>
+          Price: Low-High
+        </a>
+      ),
     },
   ];
-
-  const [products, setProducts] = useState<Product[]>([]);
-  const [gendersFilter, setGendersFilter] = useState<string[]>(genders);
 
   const shoesCategoriesItems: CollapseProps["items"] = [
     {
@@ -47,7 +68,13 @@ export const ProductListPage = () => {
         <>
           {GENDER_FILTER.map((gender, index) => (
             <div key={index + gender}>
-              <Checkbox checked={gendersFilter.includes(gender)} className="custom-checkbox capitalize" onClick={() => handleFilter(gender)}>{gender}</Checkbox>
+              <Checkbox
+                checked={gendersFilter.includes(gender)}
+                className="custom-checkbox capitalize"
+                onClick={() => handleFilter(gender)}
+              >
+                {gender}
+              </Checkbox>
             </div>
           ))}
         </>
@@ -116,8 +143,8 @@ export const ProductListPage = () => {
 
   const getProducts = () => {
     const rs = productsService.getProduct();
-    setProducts(rs as Product[])
-  }
+    setProducts(rs as Product[]);
+  };
 
   const getProductListByGender = () => {
     const result = productsService.getProductByGender(genders);
@@ -139,11 +166,6 @@ export const ProductListPage = () => {
     setProducts(rs as Product[]);
   };
 
-  const getNewestProduct = () => {
-    const rs = productsService.getNewestProduct()
-    setProducts(rs as Product[]);
-  };
-
   const fetchProducts = () => {
     if (categories.length > 0) return getProductListByCategory();
     if (status) return getProductByStatus();
@@ -154,21 +176,23 @@ export const ProductListPage = () => {
   useEffect(() => {
     fetchProducts();
     getNewestProduct();
-    getProducts()
+    getProducts();
+    getProductListByCategory();
+    getProductListByGender();
   }, [searchParams]);
 
   const handleFilter = (gender: string) => {
-    let payload = gendersFilter
+    let payload = gendersFilter;
     if (gendersFilter.includes(gender)) {
-      payload = gendersFilter.filter((item) => item !== gender)
+      payload = gendersFilter.filter((item) => item !== gender);
     } else {
       payload = [...gendersFilter, gender];
     }
     setGendersFilter(payload);
 
     const result = productsService.getProductByGender(payload);
-    setProducts(result)
-  }
+    setProducts(result);
+  };
 
   return (
     <section>

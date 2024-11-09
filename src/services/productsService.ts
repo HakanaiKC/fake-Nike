@@ -1,10 +1,10 @@
 import api from "../api/api.json";
+import { Product } from "../type/product-types";
 
 const getProduct = () => {
   const res = api.sneakers;
   return res;
 };
-
 
 const getProductById = (id: number) => {
   const res = api.sneakers.find((item) => item.id === id);
@@ -30,7 +30,7 @@ const getNewestProduct = () => {
     }
   });
 
-  return newestProductDate.slice(0, 10);
+  return newestProductDate;
 };
 
 const getBlackSpotlight = () => {
@@ -50,24 +50,45 @@ const getProductByCategory = (shoesCategory: string[]) => {
 const getProductByGender = (shoesGender: string[]) => {
   const shoesByCategory = api.sneakers;
 
-  let dataFilter: any = []
-  shoesByCategory.forEach(item => {
-    shoesGender.forEach(i => {
-      if(item.gender.includes(i)){
-        dataFilter.push(item)
+  let dataFilter: any = [];
+  shoesByCategory.forEach((item) => {
+    shoesGender.forEach((i) => {
+      if (item.gender.includes(i)) {
+        dataFilter.push(item);
       }
-    })
-  })
+    });
+  });
 
-  if(!shoesGender.length){
-    dataFilter = shoesByCategory
+  if (!shoesGender.length) {
+    dataFilter = shoesByCategory;
   }
-  return dataFilter
+  return dataFilter;
 };
 
 const getProductByStatus = (status: string) => {
   const shoesByCategory = api.sneakers.filter((item) => item.status === status);
   return shoesByCategory;
+};
+
+const getProductByYearAsc = (product: Product[]) => {
+  const sortedProduct = product.sort((a, b) => {
+    if (a.release_year === null) return 1;
+    if (b.release_year === null) return -1;
+    return b.release_year - a.release_year;
+  });
+
+  return sortedProduct;
+};
+
+const sortProductsByPrice = (products: Product[], sortAscending: boolean) => {
+  return products.sort((a, b) => {
+    if (a.retail_price_cents === null) return 1;
+    if (b.retail_price_cents === null) return -1;
+
+    return sortAscending
+      ? a.retail_price_cents - b.retail_price_cents
+      : b.retail_price_cents - a.retail_price_cents;
+  });
 };
 
 export default {
@@ -78,4 +99,6 @@ export default {
   getProductByCategory,
   getProductByStatus,
   getProductByGender,
+  getProductByYearAsc,
+  sortProductsByPrice,
 };
