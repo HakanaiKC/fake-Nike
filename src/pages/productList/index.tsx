@@ -8,113 +8,116 @@ import { Product } from "../../type/product-types";
 import { Link, useSearchParams } from "react-router-dom";
 import "./index.css";
 import formatPrice from "../../utils/formatter";
-import api from "../../api/api.json";
 
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: <a href="#">Featured</a>,
-  },
-  {
-    key: "2",
-    label: <a href="#">Newest</a>,
-  },
-  {
-    key: "3",
-    label: <a href="#">Price: High-Low</a>,
-  },
-  {
-    key: "4",
-    label: <a href="#">Price: Low-High</a>,
-  },
-];
-
-const shoesCategoriesItems: CollapseProps["items"] = [
-  {
-    key: "1",
-    label: "Gender",
-    children: (
-      <>
-        <div>
-          <Checkbox className="custom-checkbox">Men</Checkbox>
-        </div>
-        <div>
-          <Checkbox className="custom-checkbox">Women</Checkbox>
-        </div>
-        <div>
-          <Checkbox className="custom-checkbox">Unisex</Checkbox>
-        </div>
-      </>
-    ),
-  },
-  {
-    key: "2",
-    label: "Kids",
-    children: (
-      <>
-        <div>
-          <Checkbox className="custom-checkbox">Boys</Checkbox>
-        </div>
-        <div>
-          <Checkbox className="custom-checkbox">Girls</Checkbox>
-        </div>
-      </>
-    ),
-  },
-  {
-    key: "3",
-    label: "Sale & Offer",
-    children: (
-      <>
-        <div>
-          <Checkbox className="custom-checkbox">Sale</Checkbox>
-        </div>
-      </>
-    ),
-  },
-  {
-    key: "4",
-    label: "Color",
-    children: (
-      <>
-        <div className="grid grid-cols-3 justify-items-center">
-          <div className="flex mb-5 flex-col items-center">
-            <div className="w-7 h-7 bg-black rounded-full"></div>
-            <p>Black</p>
-          </div>
-          <div className="flex mb-5 flex-col items-center">
-            <div className="w-7 h-7 bg-blue-700 rounded-full"></div>
-            <p>Blue</p>
-          </div>
-          <div className="flex mb-5 flex-col items-center">
-            <div className="w-7 h-7 bg-white rounded-full border border-gray-300"></div>
-            <p>White</p>
-          </div>
-          <div className="flex mb-5 flex-col items-center">
-            <div className="w-7 h-7 bg-amber-900 rounded-full"></div>
-            <p>Brown</p>
-          </div>
-          <div className="flex mb-5 flex-col items-center">
-            <div className="w-7 h-7 bg-red-600 rounded-full"></div>
-            <p>Red</p>
-          </div>
-          <div className="flex mb-5 flex-col items-center">
-            <div className="w-7 h-7 bg-yellow-400 rounded-full"></div>
-            <p>Yellow</p>
-          </div>
-        </div>
-      </>
-    ),
-  },
-];
+const GENDER_FILTER = ['men', 'women', 'youth']
 
 export const ProductListPage = () => {
-  const [products, setProducts] = useState<Product[]>([]);
   const [searchParams] = useSearchParams();
   const categories = searchParams.get("category")?.split(",") || [];
   const genders = searchParams.get("gender")?.split(",") || [];
   const status = searchParams.get("status") || "";
   const color = searchParams.get("color") || "";
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <a href="#">Featured</a>,
+    },
+    {
+      key: "2",
+      label: <a href="#">Newest</a>,
+    },
+    {
+      key: "3",
+      label: <a href="#">Price: High-Low</a>,
+    },
+    {
+      key: "4",
+      label: <a href="#">Price: Low-High</a>,
+    },
+  ];
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [gendersFilter, setGendersFilter] = useState<string[]>(genders);
+
+  const shoesCategoriesItems: CollapseProps["items"] = [
+    {
+      key: "1",
+      label: "Gender",
+      children: (
+        <>
+          {GENDER_FILTER.map((gender, index) => (
+            <div key={index + gender}>
+              <Checkbox checked={gendersFilter.includes(gender)} className="custom-checkbox capitalize" onClick={() => handleFilter(gender)}>{gender}</Checkbox>
+            </div>
+          ))}
+        </>
+      ),
+    },
+    {
+      key: "2",
+      label: "Category",
+      children: (
+        <>
+          <div>
+            <Checkbox className="custom-checkbox">Boys</Checkbox>
+          </div>
+          <div>
+            <Checkbox className="custom-checkbox">Girls</Checkbox>
+          </div>
+        </>
+      ),
+    },
+    {
+      key: "3",
+      label: "Available",
+      children: (
+        <>
+          <div>
+            <Checkbox className="custom-checkbox">Sale</Checkbox>
+          </div>
+        </>
+      ),
+    },
+    {
+      key: "4",
+      label: "Color",
+      children: (
+        <>
+          <div className="grid grid-cols-3 justify-items-center">
+            <div className="flex mb-5 flex-col items-center">
+              <div className="w-7 h-7 bg-black rounded-full"></div>
+              <p>Black</p>
+            </div>
+            <div className="flex mb-5 flex-col items-center">
+              <div className="w-7 h-7 bg-blue-700 rounded-full"></div>
+              <p>Blue</p>
+            </div>
+            <div className="flex mb-5 flex-col items-center">
+              <div className="w-7 h-7 bg-white rounded-full border border-gray-300"></div>
+              <p>White</p>
+            </div>
+            <div className="flex mb-5 flex-col items-center">
+              <div className="w-7 h-7 bg-amber-900 rounded-full"></div>
+              <p>Brown</p>
+            </div>
+            <div className="flex mb-5 flex-col items-center">
+              <div className="w-7 h-7 bg-red-600 rounded-full"></div>
+              <p>Red</p>
+            </div>
+            <div className="flex mb-5 flex-col items-center">
+              <div className="w-7 h-7 bg-yellow-400 rounded-full"></div>
+              <p>Yellow</p>
+            </div>
+          </div>
+        </>
+      ),
+    },
+  ];
+
+  const getProducts = () => {
+    const rs = productsService.getProduct();
+    setProducts(rs as Product[])
+  }
 
   const getProductListByGender = () => {
     const result = productsService.getProductByGender(genders);
@@ -137,8 +140,8 @@ export const ProductListPage = () => {
   };
 
   const getNewestProduct = () => {
-    const rs = api.sneakers.map((category) => category.category);
-    console.log(rs);
+    const rs = productsService.getNewestProduct()
+    setProducts(rs as Product[]);
   };
 
   const fetchProducts = () => {
@@ -151,7 +154,21 @@ export const ProductListPage = () => {
   useEffect(() => {
     fetchProducts();
     getNewestProduct();
+    getProducts()
   }, [searchParams]);
+
+  const handleFilter = (gender: string) => {
+    let payload = gendersFilter
+    if (gendersFilter.includes(gender)) {
+      payload = gendersFilter.filter((item) => item !== gender)
+    } else {
+      payload = [...gendersFilter, gender];
+    }
+    setGendersFilter(payload);
+
+    const result = productsService.getProductByGender(payload);
+    setProducts(result)
+  }
 
   return (
     <section>

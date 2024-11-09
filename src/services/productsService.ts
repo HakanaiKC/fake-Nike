@@ -1,5 +1,11 @@
 import api from "../api/api.json";
 
+const getProduct = () => {
+  const res = api.sneakers;
+  return res;
+};
+
+
 const getProductById = (id: number) => {
   const res = api.sneakers.find((item) => item.id === id);
   return res;
@@ -42,10 +48,21 @@ const getProductByCategory = (shoesCategory: string[]) => {
 };
 
 const getProductByGender = (shoesGender: string[]) => {
-  const shoesByCategory = api.sneakers.filter((item) =>
-    item.gender.some((gender) => shoesGender.includes(gender))
-  );
-  return shoesByCategory;
+  const shoesByCategory = api.sneakers;
+
+  let dataFilter: any = []
+  shoesByCategory.forEach(item => {
+    shoesGender.forEach(i => {
+      if(item.gender.includes(i)){
+        dataFilter.push(item)
+      }
+    })
+  })
+
+  if(!shoesGender.length){
+    dataFilter = shoesByCategory
+  }
+  return dataFilter
 };
 
 const getProductByStatus = (status: string) => {
@@ -54,6 +71,7 @@ const getProductByStatus = (status: string) => {
 };
 
 export default {
+  getProduct,
   getProductById,
   getNewestProduct,
   getBlackSpotlight,
