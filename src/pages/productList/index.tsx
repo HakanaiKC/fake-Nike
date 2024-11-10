@@ -33,6 +33,18 @@ export const ProductListPage = () => {
     setProducts(rs.slice(0, 10) as Product[]);
   };
 
+  const handleChangeHasStock = (e: any) => {
+    if (categories.length) {
+      const productsByCategory = getProductListByCategory()
+      const rs = productsService.filterProductByHasStock(e.target.checked, productsByCategory as Product[]);
+      setProducts(rs)
+    } else if (genders.length) {
+      const productsByGender = getProductListByGender(getProducts() as Product[])
+      const rs = productsService.filterProductByHasStock(e.target.checked, productsByGender as Product[]);
+      setProducts(rs)
+    }
+  }
+
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -82,31 +94,17 @@ export const ProductListPage = () => {
     },
     {
       key: "2",
-      label: "Category",
+      label: "Available",
       children: (
         <>
           <div>
-            <Checkbox className="custom-checkbox">Boys</Checkbox>
-          </div>
-          <div>
-            <Checkbox className="custom-checkbox">Girls</Checkbox>
+            <Checkbox className="custom-checkbox" onChange={handleChangeHasStock}>Has Stock</Checkbox>
           </div>
         </>
       ),
     },
     {
       key: "3",
-      label: "Available",
-      children: (
-        <>
-          <div>
-            <Checkbox className="custom-checkbox">Sale</Checkbox>
-          </div>
-        </>
-      ),
-    },
-    {
-      key: "4",
       label: "Color",
       children: (
         <>
@@ -144,16 +142,20 @@ export const ProductListPage = () => {
   const getProducts = () => {
     const rs = productsService.getProduct();
     setProducts(rs as Product[]);
+    return rs
   };
 
-  const getProductListByGender = () => {
-    const result = productsService.getProductByGender(genders);
+  const getProductListByGender = (product: Product[]) => {
+    const result = productsService.getProductByGender(genders, product);
     setProducts(result as Product[]);
+    return result
   };
 
   const getProductListByCategory = () => {
     const result = productsService.getProductByCategory(categories);
+    getProductListByGender(result as Product[]);
     setProducts(result as Product[]);
+    return result
   };
 
   const getProductByStatus = () => {
@@ -161,16 +163,15 @@ export const ProductListPage = () => {
     setProducts(rs as Product[]);
   };
 
-  const getProductByColor = () => {
+  const getProductByColor = (): void => {
     const rs = productsService.getBlackSpotlight();
     setProducts(rs as Product[]);
   };
 
   const fetchProducts = () => {
-    if (categories.length > 0) return getProductListByCategory();
-    if (status) return getProductByStatus();
-    if (color) return getProductByColor();
-    if (genders) return getProductListByGender();
+    if (categories.length > 0) getProductListByCategory();
+    if (status) getProductByStatus();
+    if (color) getProductByColor();
   };
 
   useEffect(() => {
@@ -178,7 +179,10 @@ export const ProductListPage = () => {
     getNewestProduct();
     getProducts();
     getProductListByCategory();
-    getProductListByGender();
+
+    if (genders.length) {
+      getProductListByGender(getProducts() as Product[])
+    }
   }, [searchParams]);
 
   const handleFilter = (gender: string) => {
@@ -188,9 +192,16 @@ export const ProductListPage = () => {
     } else {
       payload = [...gendersFilter, gender];
     }
-    setGendersFilter(payload);
 
-    const result = productsService.getProductByGender(payload);
+    let result: Product[] = []
+    setGendersFilter(payload);
+    if (genders.length) {
+      result = productsService.getProductByGender(payload, getProducts() as Product[]);
+    } else {
+      result = productsService.getProductByGender(payload, getProductListByCategory() as Product[]);
+    }
+    console.log(result);
+
     setProducts(result);
   };
 

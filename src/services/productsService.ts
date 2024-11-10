@@ -47,10 +47,10 @@ const getProductByCategory = (shoesCategory: string[]) => {
   return shoesByCategory;
 };
 
-const getProductByGender = (shoesGender: string[]) => {
-  const shoesByCategory = api.sneakers;
-
+const getProductByGender = (shoesGender: string[], product: Product[]) => {
+  const shoesByCategory = product;
   let dataFilter: any = [];
+
   shoesByCategory.forEach((item) => {
     shoesGender.forEach((i) => {
       if (item.gender.includes(i)) {
@@ -91,6 +91,16 @@ const sortProductsByPrice = (products: Product[], sortAscending: boolean) => {
   });
 };
 
+const filterProductByHasStock = (hasStock: boolean, product: Product[]) => {
+  if (hasStock) {
+    const result = product.filter(item => item.has_stock === true)
+    return result
+  } else {
+    const result = product
+    return result
+  }
+}
+
 export default {
   getProduct,
   getProductById,
@@ -101,4 +111,5 @@ export default {
   getProductByGender,
   getProductByYearAsc,
   sortProductsByPrice,
+  filterProductByHasStock
 };
