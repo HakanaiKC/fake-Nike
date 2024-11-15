@@ -19,6 +19,8 @@ import ProductDetailModal from "../../components/Modal/ProductDetailModal";
 import { Product } from "../../type/product-types";
 import productsService from "../../services/productsService";
 import formatPrice from "../../utils/formatter";
+import cartService from "../../services/cartService";
+import { ProductCartDetail } from "../../type/cart-types";
 
 const shoesSlides = Array(6).fill({
   imgSrc: "https://picsum.photos/535/669",
@@ -89,7 +91,8 @@ const ProductDetail = () => {
   const [currentImageId, setCurrentImageId] = useState(0);
 
   const params = useParams();
-  const [productDetails, setProductDetails] = useState<Product>();
+  const [productDetails, setProductDetails] = useState<Product | undefined>();
+  const [cartItems, setCartItems] = useState<ProductCartDetail[] | undefined>();
 
   const getProductDetails = () => {
     const productId = Number(params.productId);
@@ -113,8 +116,8 @@ const ProductDetail = () => {
     setIsModalCartOpen(false);
   };
 
-  const handleSelectSize = (id: number) => {
-    setSelectedSize(id);
+  const handleSelectSize = (size: number) => {
+    setSelectedSize(size);
     setIsSelectedSize(true);
     setErrorMessage("");
   };
@@ -123,10 +126,42 @@ const ProductDetail = () => {
     setCurrentImageId(index);
   };
 
-  const handleAddToCart = () => {
-    if (isSelectedSize) {
+  const handleAddToCart = async (
+    userId = 1,
+    productDetails: Product | undefined
+  ) => {
+    if (selectedSize !== undefined && isSelectedSize && productDetails) {
       window.scrollTo(0, 0);
       setIsModalCartOpen(true);
+
+      const uniqueCartItemId = Number.parseInt(
+        `${productDetails.id}-${Date.now()}`
+      );
+
+      const productAdded = {
+        id: productDetails.id,
+        name: productDetails.name,
+        brand_name: productDetails.brand_name,
+        price: productDetails.retail_price_cents,
+        quantity: 1,
+        total: productDetails.retail_price_cents * 1,
+        discountPercentage: 0,
+        discountedPrice: productDetails.retail_price_cents,
+        thumbnail: productDetails.grid_picture_url,
+        size: selectedSize,
+        cartId: uniqueCartItemId,
+      };
+
+      const addToCart = await cartService.addProductToCart(userId, [
+        { id: productDetails.id, quantity: 1 },
+      ]);
+
+      setCartItems((prevCartItems) => {
+        const updatedProducts = prevCartItems
+          ? [...prevCartItems, productAdded]
+          : [productAdded];
+        return addToCart.products.concat(updatedProducts);
+      });
     } else {
       setErrorMessage("Please select a size.");
     }
@@ -341,7 +376,7 @@ const ProductDetail = () => {
             <div className="mb-8">
               <button
                 className="bg-black text-white rounded-full h-[60px] px-6 mb-3 font-bold w-[328px] flex items-center justify-center hover:opacity-70"
-                onClick={handleAddToCart}
+                onClick={() => handleAddToCart(1, productDetails)}
               >
                 Add to Bag
               </button>
@@ -361,7 +396,7 @@ const ProductDetail = () => {
                 <>
                   <Link to={"/cart"}>
                     <button className="rounded-full h-[60px] px-6 mb-3 font-bold w-full flex items-center justify-center border-2 border-gray-300 hover:border-black">
-                      View Bag (1)
+                      View Bag ({cartItems?.length})
                     </button>
                   </Link>
                   <button className="bg-black text-white rounded-full h-[60px] px-6 mb-3 font-bold w-full flex items-center justify-center hover:opacity-70">
@@ -374,19 +409,30 @@ const ProductDetail = () => {
               onCancel={handleCancel}
               className="p-8 !w-full flex justify-end"
             >
-              <div className="flex items-center space-x-4 p-4">
-                <img
-                  src="https://picsum.photos/535/669"
-                  alt="Nike Cortez Textile"
-                  className="w-[100px] h-[100px]"
-                />
-                <div>
-                  <p className="font-bold">Nike Free Metcon 6</p>
-                  <p className="text-gray-500">Men's Workout Shoes</p>
-                  <p className="text-gray-500">Size EU 40</p>
-                  <p className="font-bold">3,519,000₫</p>
+              {cartItems && (
+                <div
+                  className="flex items-center space-x-4 p-4"
+                  key={cartItems[cartItems.length - 1].cartId}
+                >
+                  <img
+                    src={cartItems[cartItems.length - 1].thumbnail}
+                    alt="Nike Cortez Textile"
+                    className="w-[100px] h-[100px]"
+                  />
+                  <div>
+                    <p className="font-bold">
+                      {cartItems[cartItems.length - 1].name}
+                    </p>
+                    <p className="text-gray-500">
+                      {cartItems[cartItems.length - 1].brand_name}
+                    </p>
+                    <p className="text-gray-500">Size: {selectedSize}</p>
+                    <p className="font-bold">
+                      {formatPrice(cartItems[cartItems.length - 1].price)}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
             </Modal>
             <div>
               <p>

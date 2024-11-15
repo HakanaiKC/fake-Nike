@@ -158,8 +158,8 @@ const CartPage = () => {
           className="capitalize"
         >
           {shoesSlides.map((slide, index) => (
-            <Link to={`/`}>
-              <div key={index} className="slide p-2">
+            <Link to={`/`} key={index + Date.now()}>
+              <div className="slide p-2">
                 <img
                   src={slide.imgSrc}
                   alt={slide.alt}

@@ -9,6 +9,23 @@ import { Link, useSearchParams } from "react-router-dom";
 import "./index.css";
 import formatPrice from "../../utils/formatter";
 
+const colorClasses: { [key: string]: string } = {
+  black: "bg-black",
+  red: "bg-red-500", // Adjust shades as needed
+  white: "bg-white",
+  blue: "bg-blue-500",
+  brown: "bg-amber-700", // Tailwind has limited named brown shades; you can adjust or use custom colors
+  green: "bg-green-500",
+  pink: "bg-pink-500",
+  purple: "bg-purple-500",
+  cream: "bg-yellow-100", // You can define how to approximate cream
+  "multi-color": "bg-gradient-to-r from-red-500 to-blue-500", // Example gradient
+  orange: "bg-orange-500",
+  tan: "bg-yellow-600",
+  grey: "bg-gray-500",
+  yellow: "bg-yellow-500",
+};
+
 const GENDER_FILTER = ["men", "women", "youth"];
 
 export const ProductListPage = () => {
@@ -19,6 +36,18 @@ export const ProductListPage = () => {
   const color = searchParams.get("color") || "";
   const [products, setProducts] = useState<Product[]>([]);
   const [gendersFilter, setGendersFilter] = useState<string[]>(genders);
+  const [allColorsProduct, setAllColorsProduct] = useState<string[]>();
+
+  const getProducts = () => {
+    const rs = productsService.getProduct();
+    setProducts(rs as Product[]);
+    return rs;
+  };
+
+  const getProductsColors = () => {
+    const rs = productsService.getProductColors();
+    setAllColorsProduct(rs);
+  };
 
   const handleSortShoesByPrice = (
     products: Product[],
@@ -29,21 +58,49 @@ export const ProductListPage = () => {
   };
 
   const getNewestProduct = () => {
-    const rs = productsService.getNewestProduct();
+    const rs = productsService.getNewestProduct(products);
     setProducts(rs.slice(0, 10) as Product[]);
   };
 
   const handleChangeHasStock = (e: any) => {
     if (categories.length) {
-      const productsByCategory = getProductListByCategory()
-      const rs = productsService.filterProductByHasStock(e.target.checked, productsByCategory as Product[]);
-      setProducts(rs)
+      const productsByCategory = getProductListByCategory();
+      const rs = productsService.filterProductByHasStock(
+        e.target.checked,
+        productsByCategory as Product[]
+      );
+      setProducts(rs);
     } else if (genders.length) {
-      const productsByGender = getProductListByGender(getProducts() as Product[])
-      const rs = productsService.filterProductByHasStock(e.target.checked, productsByGender as Product[]);
-      setProducts(rs)
+      const productsByGender = getProductListByGender(
+        getProducts() as Product[]
+      );
+      const rs = productsService.filterProductByHasStock(
+        e.target.checked,
+        productsByGender as Product[]
+      );
+      setProducts(rs);
     }
-  }
+  };
+
+  const handleFilterShoesByColor = (color: string) => {
+    if (categories.length) {
+      const productsByCategory = getProductListByCategory();
+      const rs = productsService.getProductByColor(
+        productsByCategory as Product[],
+        color
+      );
+      setProducts(rs);
+    } else if (genders.length) {
+      const productsByGender = getProductListByGender(
+        getProducts() as Product[]
+      );
+      const rs = productsService.getProductByColor(
+        productsByGender as Product[],
+        color
+      );
+      setProducts(rs);
+    }
+  };
 
   const items: MenuProps["items"] = [
     {
@@ -98,7 +155,12 @@ export const ProductListPage = () => {
       children: (
         <>
           <div>
-            <Checkbox className="custom-checkbox" onChange={handleChangeHasStock}>Has Stock</Checkbox>
+            <Checkbox
+              className="custom-checkbox"
+              onChange={handleChangeHasStock}
+            >
+              Has Stock
+            </Checkbox>
           </div>
         </>
       ),
@@ -109,53 +171,38 @@ export const ProductListPage = () => {
       children: (
         <>
           <div className="grid grid-cols-3 justify-items-center">
-            <div className="flex mb-5 flex-col items-center">
-              <div className="w-7 h-7 bg-black rounded-full"></div>
-              <p>Black</p>
-            </div>
-            <div className="flex mb-5 flex-col items-center">
-              <div className="w-7 h-7 bg-blue-700 rounded-full"></div>
-              <p>Blue</p>
-            </div>
-            <div className="flex mb-5 flex-col items-center">
-              <div className="w-7 h-7 bg-white rounded-full border border-gray-300"></div>
-              <p>White</p>
-            </div>
-            <div className="flex mb-5 flex-col items-center">
-              <div className="w-7 h-7 bg-amber-900 rounded-full"></div>
-              <p>Brown</p>
-            </div>
-            <div className="flex mb-5 flex-col items-center">
-              <div className="w-7 h-7 bg-red-600 rounded-full"></div>
-              <p>Red</p>
-            </div>
-            <div className="flex mb-5 flex-col items-center">
-              <div className="w-7 h-7 bg-yellow-400 rounded-full"></div>
-              <p>Yellow</p>
-            </div>
+            {allColorsProduct &&
+              allColorsProduct.map((item, index) => (
+                <div
+                  className="flex mb-5 flex-col items-center cursor-pointer"
+                  key={index}
+                >
+                  <div
+                    className={`w-7 h-7 ${
+                      colorClasses[item.toLowerCase()]
+                    } rounded-full border border-gray-400`}
+                    onClick={() => handleFilterShoesByColor(item)}
+                  ></div>
+                  <p>{item}</p>
+                </div>
+              ))}
           </div>
         </>
       ),
     },
   ];
 
-  const getProducts = () => {
-    const rs = productsService.getProduct();
-    setProducts(rs as Product[]);
-    return rs
-  };
-
   const getProductListByGender = (product: Product[]) => {
     const result = productsService.getProductByGender(genders, product);
     setProducts(result as Product[]);
-    return result
+    return result;
   };
 
   const getProductListByCategory = () => {
     const result = productsService.getProductByCategory(categories);
     getProductListByGender(result as Product[]);
     setProducts(result as Product[]);
-    return result
+    return result;
   };
 
   const getProductByStatus = () => {
@@ -168,20 +215,19 @@ export const ProductListPage = () => {
     setProducts(rs as Product[]);
   };
 
-  const fetchProducts = () => {
-    if (categories.length > 0) getProductListByCategory();
-    if (status) getProductByStatus();
-    if (color) getProductByColor();
-  };
-
   useEffect(() => {
-    fetchProducts();
     getNewestProduct();
     getProducts();
     getProductListByCategory();
-
+    getProductsColors();
+    if (status) {
+      getProductByStatus();
+    }
+    if (color) {
+      getProductByColor();
+    }
     if (genders.length) {
-      getProductListByGender(getProducts() as Product[])
+      getProductListByGender(getProducts() as Product[]);
     }
   }, [searchParams]);
 
@@ -193,15 +239,19 @@ export const ProductListPage = () => {
       payload = [...gendersFilter, gender];
     }
 
-    let result: Product[] = []
+    let result: Product[] = [];
     setGendersFilter(payload);
     if (genders.length) {
-      result = productsService.getProductByGender(payload, getProducts() as Product[]);
+      result = productsService.getProductByGender(
+        payload,
+        getProducts() as Product[]
+      );
     } else {
-      result = productsService.getProductByGender(payload, getProductListByCategory() as Product[]);
+      result = productsService.getProductByGender(
+        payload,
+        getProductListByCategory() as Product[]
+      );
     }
-    console.log(result);
-
     setProducts(result);
   };
 

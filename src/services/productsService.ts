@@ -11,8 +11,8 @@ const getProductById = (id: number) => {
   return res;
 };
 
-const getNewestProduct = () => {
-  const releaseDateArray = api.sneakers.map((item) => {
+const getNewestProduct = (products: Product[]) => {
+  const releaseDateArray = products.map((item) => {
     if (item.release_date) {
       const timestamp = Date.parse(item.release_date);
       return { ...item, release_date: timestamp };
@@ -93,13 +93,26 @@ const sortProductsByPrice = (products: Product[], sortAscending: boolean) => {
 
 const filterProductByHasStock = (hasStock: boolean, product: Product[]) => {
   if (hasStock) {
-    const result = product.filter(item => item.has_stock === true)
-    return result
+    const result = product.filter((item) => item.has_stock === true);
+    return result;
   } else {
-    const result = product
-    return result
+    const result = product;
+    return result;
   }
-}
+};
+
+const getProductColors = () => {
+  const allColorsAvailable = api.sneakers.map((item) => item.color);
+  const uniqueColors = allColorsAvailable.filter(
+    (color, index) => allColorsAvailable.indexOf(color) === index
+  );
+  return uniqueColors;
+};
+
+const getProductByColor = (products: Product[], shoesColor: string) => {
+  const rs = products.filter((item) => item.color === shoesColor);
+  return rs;
+};
 
 export default {
   getProduct,
@@ -111,5 +124,7 @@ export default {
   getProductByGender,
   getProductByYearAsc,
   sortProductsByPrice,
-  filterProductByHasStock
+  filterProductByHasStock,
+  getProductColors,
+  getProductByColor,
 };

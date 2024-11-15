@@ -55,7 +55,9 @@ const HomepageComponent = () => {
   };
 
   const fetchNewestProduct = () => {
-    const rs = productsService.getNewestProduct();
+    const rs = productsService.getNewestProduct(
+      productsService.getProduct() as Product[]
+    );
     setListNewestProducts(rs.slice(0, 10));
   };
 
@@ -180,22 +182,22 @@ const HomepageComponent = () => {
                 key={item.imgUrl + index}
                 onClick={() => updateSearchStatus(item.status)}
               >
-                <div className="h-full w-full overflow-hidden">
-                  <img
-                    src={item.imgUrl}
-                    alt="Nike Just Do It!"
-                    className="hover:scale-125"
-                  />
-                </div>
-                <div className="absolute bottom-12 left-12">
-                  <p className="pb-2 text-white">{item.category}</p>
-                  <h3 className="pb-5 text-white text-xl">{item.name}</h3>
-                  <Link to={"/product/listproducts"}>
+                <Link to={"/product/listproducts"}>
+                  <div className="h-full w-full overflow-hidden">
+                    <img
+                      src={item.imgUrl}
+                      alt="Nike Just Do It!"
+                      className="hover:scale-125"
+                    />
+                  </div>
+                  <div className="absolute bottom-12 left-12">
+                    <p className="pb-2 text-white">{item.category}</p>
+                    <h3 className="pb-5 text-white text-xl">{item.name}</h3>
                     <button className="bg-white text-black rounded-full capitalize px-4 py-1">
                       shop
                     </button>
-                  </Link>
-                </div>
+                  </div>
+                </Link>
               </div>
             ))}
           </div>
