@@ -10,6 +10,8 @@ import Layout from "./pages/Layout/index.tsx";
 import ProductDetail from "./pages/product/index.tsx";
 import { ProductListPage } from "./pages/productList/index.tsx";
 import CartPage from "./pages/cart/index.tsx";
+import { Provider } from "react-redux";
+import { store } from "./stores/cartStore.ts";
 
 const router = createBrowserRouter([
   {
@@ -58,8 +60,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AppProvider>
-      <RouterProvider router={router} />
-    </AppProvider>
+    <Provider store={store}>
+      <AppProvider>
+        <RouterProvider router={router} />
+      </AppProvider>
+    </Provider>
   </StrictMode>
 );

@@ -38,7 +38,7 @@ const Footer = () => {
             <div className="menu-grid p-12 ">
                 <div className="grid grid-cols-4 text-sm border-t-gray-300 border-2">
                     {footerItems.map((column, colIndex) => (
-                        <ul key={colIndex} className="space-y-2 mt-12">
+                        <ul key={colIndex+Date.now()} className="space-y-2 mt-12">
                             <h4 key={colIndex} className="font-bold text-gray-900 pb-6">
                                 {column.title}
                             </h4>

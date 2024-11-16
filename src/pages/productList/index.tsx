@@ -11,15 +11,15 @@ import formatPrice from "../../utils/formatter";
 
 const colorClasses: { [key: string]: string } = {
   black: "bg-black",
-  red: "bg-red-500", // Adjust shades as needed
+  red: "bg-red-500",
   white: "bg-white",
   blue: "bg-blue-500",
-  brown: "bg-amber-700", // Tailwind has limited named brown shades; you can adjust or use custom colors
+  brown: "bg-amber-700",
   green: "bg-green-500",
   pink: "bg-pink-500",
   purple: "bg-purple-500",
-  cream: "bg-yellow-100", // You can define how to approximate cream
-  "multi-color": "bg-gradient-to-r from-red-500 to-blue-500", // Example gradient
+  cream: "bg-yellow-100",
+  "multi-color": "bg-gradient-to-r from-red-500 to-blue-500",
   orange: "bg-orange-500",
   tan: "bg-yellow-600",
   grey: "bg-gray-500",
@@ -96,6 +96,13 @@ export const ProductListPage = () => {
       );
       const rs = productsService.getProductByColor(
         productsByGender as Product[],
+        color
+      );
+      setProducts(rs);
+    }else if (status.length){
+      const productsByStatus = productsService.getProductByStatus(status)
+      const rs = productsService.getProductByColor(
+        productsByStatus as Product[],
         color
       );
       setProducts(rs);
@@ -207,6 +214,7 @@ export const ProductListPage = () => {
 
   const getProductByStatus = () => {
     const rs = productsService.getProductByStatus(status);
+    console.log(rs);
     setProducts(rs as Product[]);
   };
 

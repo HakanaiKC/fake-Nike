@@ -8,7 +8,6 @@ export interface ProductCartDetail {
   brand_name: string;
   price: number;
   quantity: number;
-  total: number;
   discountPercentage: number;
   discountedPrice: number;
   thumbnail: string;
