@@ -7,20 +7,40 @@ import {
 } from "../icons/IconSvg";
 import styles from "./index.module.scss";
 import { Dropdown, MenuProps } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../api/api.json";
 import formatPrice from "../../utils/formatter";
+import { Product } from "../../type/product-types";
 
 export const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [getListSearchItems, setGetListSearchItems] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const filteredList = api.sneakers.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const getListSearchProduct = () => {
+    const searchProductList = api.sneakers.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    console.log(searchProductList);
+    setGetListSearchItems(searchProductList as Product[])
+  }
 
-  const items: MenuProps["items"] = filteredList.map((item, index) => ({
+  const handleSearch = (e: any) => {
+    if (e.target.value.length > 2) {
+      setIsSearching(true)
+    } else {
+      setIsSearching(false)
+    }
+    setSearchTerm(e.target.value)
+  }
+
+  useEffect(() => {
+    getListSearchProduct()
+  }, [searchTerm])
+
+  const items: MenuProps["items"] = getListSearchItems.map((item, index) => ({
     label: (
-      <Link to={`/product/${item.id}`}>
+      <Link to={`/product/${item.id}`} onClick={() => setIsSearching(false)}>
         <div className="flex items-center space-x-4 p-4">
           <img
             src={item.grid_picture_url}
@@ -112,19 +132,21 @@ export const Header = () => {
         </nav>
 
         <div className="col-span-3 flex items-center justify-end gap-4">
-          <Dropdown menu={{ items }}>
+          <Dropdown menu={{ items }} open={isSearching}>
             <form className="border border-slate-300 rounded-3xl bg-gray-200 hover:bg-gray-300">
               <input
                 type="text"
                 className={`${styles.search_form} `}
                 placeholder="Search"
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => handleSearch(e)}
               />
             </form>
           </Dropdown>
           <div className="flex items-center space-x-4">
             <div className="p-2 hover:bg-gray-300 rounded-full">
-              <InterestedIcon />
+              <Link to={"/favourite"}>
+                <InterestedIcon />
+              </Link>
             </div>
             <div className="p-2 hover:bg-gray-300 rounded-full">
               <Link to={"/cart"}>

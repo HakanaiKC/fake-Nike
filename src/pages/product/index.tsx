@@ -9,7 +9,7 @@ import {
 } from "antd";
 import { InterestedIcon } from "../../components/icons/IconSvg";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   CheckCircleFilled,
   LeftOutlined,
@@ -24,6 +24,8 @@ import { ProductCartDetail } from "../../type/cart-types";
 import { useAppDispatch, useAppSelector } from "../../stores/hook";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, getProductInCartDetails } from "../../reducers/cartSlice";
+import { addToFavourite, checkIsFavourite } from "../../reducers/favouriteSlice";
+import { RootState } from "../../stores/cartStore";
 
 const shoesSlides = Array(6).fill({
   imgSrc: "https://picsum.photos/535/669",
@@ -90,6 +92,7 @@ const ProductDetail = () => {
   const [isModalCartOpen, setIsModalCartOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<number>();
   const [isSelectedSize, setIsSelectedSize] = useState<boolean>(false);
+  const [isFavourite, setIsFavourite] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [currentImageId, setCurrentImageId] = useState(0);
   const productToCart = useAppSelector(getProductInCartDetails);
@@ -98,6 +101,9 @@ const ProductDetail = () => {
 
   const params = useParams();
   const [productDetails, setProductDetails] = useState<Product | undefined>();
+  const favouriteProducts = useAppSelector((state: RootState) => state.favourites.value)
+  console.log(favouriteProducts);
+  
 
   const getProductDetails = () => {
     const productId = Number(params.productId);
@@ -135,7 +141,7 @@ const ProductDetail = () => {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
-  const handleAddToCart = async (productDetails: Product | undefined) => {
+  const handleAddToCart = async () => {
     if (selectedSize !== undefined && isSelectedSize && productDetails) {
       window.scrollTo(0, 0);
       setIsModalCartOpen(true);
@@ -176,6 +182,15 @@ const ProductDetail = () => {
   const showModal = () => {
     setIsModalOpen(true);
   };
+
+  const handleAddFavouriteProduct = () => {
+    if (productDetails) {
+      dispatch(addToFavourite(productDetails))
+      dispatch(checkIsFavourite({ productDetails, isFavourite }))
+      const rs = favouriteProducts.some(item=>item.id === productDetails.id)
+      setIsFavourite(rs)
+    }
+  }
 
   return (
     <section>
@@ -245,9 +260,8 @@ const ProductDetail = () => {
                 />
                 <div
                   onMouseEnter={() => handleHoverOnImage(productDetails.id)}
-                  className={`${
-                    currentImageId === productDetails.id ? "opacity-40" : ""
-                  }
+                  className={`${currentImageId === productDetails.id ? "opacity-40" : ""
+                    }
                     absolute bottom-0 left-0 right-0 top-0 h-[60px] w-[60px] overflow-hidden bg-gray-300 bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-40`}
                 ></div>
               </div>
@@ -306,11 +320,10 @@ const ProductDetail = () => {
               ))} */}
               {productDetails && (
                 <div
-                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${
-                    activeProductColor === productDetails.color
-                      ? "border-2 border-black"
-                      : ""
-                  }`}
+                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${activeProductColor === productDetails.color
+                    ? "border-2 border-black"
+                    : ""
+                    }`}
                   key={productDetails.id}
                   onClick={() => handleClickGetListActive(productDetails)}
                 >
@@ -355,9 +368,8 @@ const ProductDetail = () => {
                 {productDetails &&
                   productDetails.size_range.map((size, index) => (
                     <div
-                      className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${
-                        selectedSize === size ? "!border-black" : ""
-                      }`}
+                      className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${selectedSize === size ? "!border-black" : ""
+                        }`}
                       key={index}
                       onClick={() => handleSelectSize(size)}
                     >
@@ -370,12 +382,13 @@ const ProductDetail = () => {
             <div className="mb-8">
               <button
                 className="bg-black text-white rounded-full h-[60px] px-6 mb-3 font-bold w-[328px] flex items-center justify-center hover:opacity-70"
-                onClick={() => handleAddToCart(productDetails)}
+                onClick={handleAddToCart}
               >
                 Add to Bag
               </button>
-              <button className="rounded-full h-[60px] px-6 mb-3 font-bold w-[328px] flex items-center justify-center border-2 border-gray-300 hover:border-black">
-                Favourite <InterestedIcon />
+              <button className="rounded-full h-[60px] px-6 mb-3 font-bold w-[328px] flex items-center justify-center border-2 border-gray-300 hover:border-black"
+                onClick={handleAddFavouriteProduct}>
+                Favourite <span className={`${!isFavourite && "text-red-500"}`}><InterestedIcon /></span>
               </button>
             </div>
             <Modal

@@ -12,6 +12,7 @@ import { ProductListPage } from "./pages/productList/index.tsx";
 import CartPage from "./pages/cart/index.tsx";
 import { Provider } from "react-redux";
 import { store } from "./stores/cartStore.ts";
+import FavouritePage from "./pages/favourite/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,16 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <CartPage />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "favourite",
+        element: <FavouritePage />,
       },
     ],
   }

@@ -36,5 +36,6 @@ export interface Product {
   status: string;
   story_html: string;
   upper_material: string;
+  isFavourite?: boolean
 }
 
