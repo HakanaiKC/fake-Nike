@@ -1,11 +1,14 @@
 import Carousel from "antd/es/carousel";
-import { Link, useLocation } from "react-router-dom";
-import WhiteNike from "../../assets/img/shoes pink/W+NIKE+CORTEZ Pink.png";
+import { Link } from "react-router-dom";
 import { InterestedIcon } from "../../components/icons/IconSvg";
 import { Button, Tooltip } from "antd";
-import { useState } from "react";
-import { QuestionCircleFilled } from "@ant-design/icons";
-import { decrementQuantity, getProductInCartDetails, incrementQuantity } from "../../reducers/cartSlice";
+import { DeleteOutlined, QuestionCircleFilled } from "@ant-design/icons";
+import {
+  decrementQuantity,
+  deleteCartProduct,
+  getProductInCartDetails,
+  incrementQuantity,
+} from "../../reducers/cartSlice";
 import { useAppDispatch, useAppSelector } from "../../stores/hook";
 import formatPrice from "../../utils/formatter";
 import { ProductCartDetail } from "../../type/cart-types";
@@ -22,21 +25,30 @@ const text =
   "The subtotal reflects the total price of your order, including taxes, before any applicable discounts. It does not include delivery costs and international transaction fees.";
 
 const CartPage = () => {
-  const productToCart = useAppSelector(getProductInCartDetails)
+  const productToCart = useAppSelector(getProductInCartDetails);
   const dispatch = useAppDispatch();
-  console.log(productToCart);
-  
+
   const handleIncrement = (productDetails: ProductCartDetail) => {
-    dispatch(incrementQuantity(productDetails))
+    dispatch(incrementQuantity(productDetails));
   };
 
   const handleDecrement = (productDetails: ProductCartDetail) => {
-    dispatch(decrementQuantity(productDetails))
+    dispatch(decrementQuantity(productDetails));
+  };
+
+  const handleDelete = (productId: number) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+
+    if (confirmed) {
+      dispatch(deleteCartProduct(productId));
+    }
   };
 
   const totalCartPrice = productToCart.reduce((acc: any, item) => {
     return acc + item.quantity * item.price;
-  }, 0)
+  }, 0);
 
   return (
     <>
@@ -60,49 +72,65 @@ const CartPage = () => {
             </div>
             <div className="mt-3">
               <h2 className="capitalize text-2xl font-bold">bag</h2>
-              {productToCart.length > 0 && productToCart.map(item => (
-                <>
-                  <div className="flex items-start py-6">
-                    <div>
-                      <img
-                        src={item.thumbnail}
-                        alt="Nike Cortez Textile"
-                        className="w-[164px] h-[164px] mr-5"
-                      />
+              {productToCart.length > 0 &&
+                productToCart.map((item) => (
+                  <>
+                    <div className="flex items-start py-6">
+                      <div>
+                        <img
+                          src={item.thumbnail}
+                          alt="Nike Cortez Textile"
+                          className="w-[164px] h-[164px] mr-5"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-bold">{item.name}</p>
+                        <p className="text-gray-500">{item.brand_name}</p>
+                        <p className="text-gray-500">
+                          Size{" "}
+                          <span className="underline cursor-pointer">
+                            {item.size}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="ml-12">
+                        <p className="font-bold">{formatPrice(item.price)}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-bold">{item.name}</p>
-                      <p className="text-gray-500">{item.brand_name}</p>
-                      <p className="text-gray-500">
-                        Size <span className="underline cursor-pointer">{item.size}</span>
-                      </p>
+                    <div className="flex gap-4 pb-6 border-b border-gray-300">
+                      <div className="flex items-center gap-2 border border-gray-300 rounded-full">
+                        {item.quantity == 1 ? (
+                          <Button
+                            className="border-0 w-10 h-10 rounded-full hover:!bg-gray-300 hover:!text-black"
+                            onClick={() => handleDelete(item.cartId)}
+                          >
+                            <DeleteOutlined />
+                          </Button>
+                        ) : (
+                          <Button
+                            className="border-0 w-10 h-10 rounded-full hover:!bg-gray-300 hover:!text-black"
+                            onClick={() => handleDecrement(item)}
+                          >
+                            -
+                          </Button>
+                        )}
+
+                        <div className="min-w-[20px] text-center">
+                          {item.quantity}
+                        </div>
+                        <Button
+                          className="border-0 w-10 h-10 rounded-full hover:!bg-gray-300 hover:!text-black"
+                          onClick={() => handleIncrement(item)}
+                        >
+                          +
+                        </Button>
+                      </div>
+                      <div className="p-2 rounded-full border border-gray-300 hover:bg-gray-300">
+                        <InterestedIcon />
+                      </div>
                     </div>
-                    <div className="ml-12">
-                      <p className="font-bold">{formatPrice(item.price)}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 pb-6 border-b border-gray-300">
-                    <div className="flex items-center gap-2 border border-gray-300 rounded-full">
-                      <Button
-                        className="border-0 w-10 h-10 rounded-full hover:!bg-gray-300 hover:!text-black"
-                        onClick={() => handleDecrement(item)}
-                      >
-                        -
-                      </Button>
-                      <div className="min-w-[20px] text-center">{item.quantity}</div>
-                      <Button
-                        className="border-0 w-10 h-10 rounded-full hover:!bg-gray-300 hover:!text-black"
-                        onClick={() => handleIncrement(item)}
-                      >
-                        +
-                      </Button>
-                    </div>
-                    <div className="p-2 rounded-full border border-gray-300 hover:bg-gray-300">
-                      <InterestedIcon />
-                    </div>
-                  </div>
-                </>
-              ))}
+                  </>
+                ))}
             </div>
             <div className="mt-6">
               <h2 className="capitalize text-2xl font-bold">favourites</h2>
@@ -140,7 +168,9 @@ const CartPage = () => {
               <div className="col-span-2 py-4 my-3 border border-y-gray-300">
                 <div className="flex justify-between">
                   <span>Total</span>
-                  <span className="text-right">{formatPrice(totalCartPrice)}</span>
+                  <span className="text-right">
+                    {formatPrice(totalCartPrice)}
+                  </span>
                 </div>
               </div>
             </div>

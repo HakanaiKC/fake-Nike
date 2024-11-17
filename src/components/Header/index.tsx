@@ -6,8 +6,40 @@ import {
   CartIcon,
 } from "../icons/IconSvg";
 import styles from "./index.module.scss";
+import { Dropdown, MenuProps } from "antd";
+import { useState } from "react";
+import api from "../../api/api.json";
+import formatPrice from "../../utils/formatter";
 
 export const Header = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredList = api.sneakers.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const items: MenuProps["items"] = filteredList.map((item, index) => ({
+    label: (
+      <Link to={`/product/${item.id}`}>
+        <div className="flex items-center space-x-4 p-4">
+          <img
+            src={item.grid_picture_url}
+            alt={item.name}
+            className="w-[100px] h-[100px]"
+          />
+          <div>
+            <p className="font-bold">{item.name}</p>
+            <p className="text-gray-500">{item.brand_name}</p>
+            <p className="font-bold">
+              {item.retail_price_cents && formatPrice(item.retail_price_cents)}
+            </p>
+          </div>
+        </div>
+      </Link>
+    ),
+    key: index,
+  }));
+
   return (
     <header>
       <div className="bg-gray-300 flex justify-between px-10 py-2">
@@ -80,13 +112,16 @@ export const Header = () => {
         </nav>
 
         <div className="col-span-3 flex items-center justify-end gap-4">
-          <form className="border border-slate-300 rounded-3xl bg-gray-200 hover:bg-gray-300">
-            <input
-              type="text"
-              className={`${styles.search_form} `}
-              placeholder="Search"
-            />
-          </form>
+          <Dropdown menu={{ items }}>
+            <form className="border border-slate-300 rounded-3xl bg-gray-200 hover:bg-gray-300">
+              <input
+                type="text"
+                className={`${styles.search_form} `}
+                placeholder="Search"
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </form>
+          </Dropdown>
           <div className="flex items-center space-x-4">
             <div className="p-2 hover:bg-gray-300 rounded-full">
               <InterestedIcon />

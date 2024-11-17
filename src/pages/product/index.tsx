@@ -92,13 +92,12 @@ const ProductDetail = () => {
   const [isSelectedSize, setIsSelectedSize] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [currentImageId, setCurrentImageId] = useState(0);
-  const productToCart = useAppSelector(getProductInCartDetails)
+  const productToCart = useAppSelector(getProductInCartDetails);
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const params = useParams();
   const [productDetails, setProductDetails] = useState<Product | undefined>();
-  const [cartItems, setCartItems] = useState<ProductCartDetail[] | undefined>();
 
   const getProductDetails = () => {
     const productId = Number(params.productId);
@@ -136,14 +135,12 @@ const ProductDetail = () => {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
-  const handleAddToCart = async (
-    productDetails: Product | undefined
-  ) => {
+  const handleAddToCart = async (productDetails: Product | undefined) => {
     if (selectedSize !== undefined && isSelectedSize && productDetails) {
       window.scrollTo(0, 0);
       setIsModalCartOpen(true);
 
-      const uniqueCartItemId = generateRandomSixDigitNumber()
+      const uniqueCartItemId = generateRandomSixDigitNumber();
 
       const productAdded: ProductCartDetail = {
         id: productDetails.id,
@@ -158,7 +155,7 @@ const ProductDetail = () => {
         cartId: uniqueCartItemId,
       };
 
-      dispatch(addToCart(productAdded))
+      dispatch(addToCart(productAdded));
     } else {
       setErrorMessage("Please select a size.");
     }
@@ -248,8 +245,9 @@ const ProductDetail = () => {
                 />
                 <div
                   onMouseEnter={() => handleHoverOnImage(productDetails.id)}
-                  className={`${currentImageId === productDetails.id ? "opacity-40" : ""
-                    }
+                  className={`${
+                    currentImageId === productDetails.id ? "opacity-40" : ""
+                  }
                     absolute bottom-0 left-0 right-0 top-0 h-[60px] w-[60px] overflow-hidden bg-gray-300 bg-fixed opacity-0 transition duration-300 ease-in-out hover:opacity-40`}
                 ></div>
               </div>
@@ -308,10 +306,11 @@ const ProductDetail = () => {
               ))} */}
               {productDetails && (
                 <div
-                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${activeProductColor === productDetails.color
+                  className={`w-[70px] h-[70px] hover:border-black hover:border-2 rounded ${
+                    activeProductColor === productDetails.color
                       ? "border-2 border-black"
                       : ""
-                    }`}
+                  }`}
                   key={productDetails.id}
                   onClick={() => handleClickGetListActive(productDetails)}
                 >
@@ -356,8 +355,9 @@ const ProductDetail = () => {
                 {productDetails &&
                   productDetails.size_range.map((size, index) => (
                     <div
-                      className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${selectedSize === size ? "!border-black" : ""
-                        }`}
+                      className={`border border-gray-300 rounded py-3 hover:border-black cursor-pointer ${
+                        selectedSize === size ? "!border-black" : ""
+                      }`}
                       key={index}
                       onClick={() => handleSelectSize(size)}
                     >
@@ -406,7 +406,10 @@ const ProductDetail = () => {
               {productToCart.length > 0 && (
                 <div
                   className="flex items-center space-x-4 p-4"
-                  key={productToCart[productToCart.length - 1].id + Date.now().toString()}
+                  key={
+                    productToCart[productToCart.length - 1].id +
+                    Date.now().toString()
+                  }
                 >
                   <img
                     src={productToCart[productToCart.length - 1].thumbnail}
@@ -422,7 +425,9 @@ const ProductDetail = () => {
                     </p>
                     <p className="text-gray-500">Size: {selectedSize}</p>
                     <p className="font-bold">
-                      {formatPrice(productToCart[productToCart.length - 1].price)}
+                      {formatPrice(
+                        productToCart[productToCart.length - 1].price
+                      )}
                     </p>
                   </div>
                 </div>
