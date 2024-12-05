@@ -154,7 +154,7 @@ const HomepageComponent = () => {
             loop
             autoPlay
             controls={false}
-            src="src/assets/video/Nike Shoes Ad Motion Graphics_ A Visual Masterpiece __ after effects - VIKAZ OFFICIAL (1080p, h264, youtube).mp4"
+            src="public/video/Nike Shoes Ad Motion Graphics_ A Visual Masterpiece __ after effects - VIKAZ OFFICIAL (1080p, h264, youtube).mp4"
           />
 
           <div className="text-center py-9">
@@ -240,7 +240,7 @@ const HomepageComponent = () => {
             loop
             autoPlay
             controls={false}
-            src="src/assets/video/Nike - You Can t Stop Us (2020).mp4"
+            src="public/video/Nike - You Can t Stop Us (2020).mp4"
           />
           <div className="text-center py-9">
             <h3
