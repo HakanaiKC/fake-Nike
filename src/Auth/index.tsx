@@ -1,9 +1,8 @@
-import { useEffect, useState, useCallback, ReactElement } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth/authService";
 
-function AuthComponent({ children }:any) {
+function AuthComponent({ children }: any) {
   const navigate = useNavigate();
 
   function checkLogin() {

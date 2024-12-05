@@ -8,41 +8,41 @@ import loginService from "../../services/loginService";
 export const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [isError, setIsError] = useState("")
-  const [isLogin, setIsLogin] = useState<boolean>()
+  const [isError, setIsError] = useState("");
+  const [isLogin, setIsLogin] = useState<boolean>();
   const navigate = useNavigate();
-  const { users, setUsers } = useContext(AppContext)
+  const { users, setUsers } = useContext(AppContext);
   const url = useLocation();
 
   useEffect(() => {
     if (url.pathname == "/register") {
-      setIsLogin(false)
+      setIsLogin(false);
     } else if (url.pathname == "/login") {
-      setIsLogin(true)
+      setIsLogin(true);
     }
-  }, [url.pathname])
+  }, [url.pathname]);
 
-  const handleRegister = (e: Event) => {
-    if(isLogin){
-      navigate("/register")
-      return
+  const handleRegister = () => {
+    if (isLogin) {
+      navigate("/register");
+      return;
     }
 
     const newUser = {
       email: email,
-      password: password
-    }
+      password: password,
+    };
 
-    const isExistUser = users.some(user => user.email == newUser.email)
+    const isExistUser = users.some((user) => user.email == newUser.email);
     if (!isExistUser) {
-      setIsError("")
+      setIsError("");
       setUsers([...users, newUser]);
       console.log(users);
-      navigate("/login")
+      navigate("/login");
     } else {
-      setIsError("This user is existed")
+      setIsError("This user is existed");
     }
-  }
+  };
 
   const handleLogin = async (event: Event) => {
     event.preventDefault();
@@ -52,12 +52,12 @@ export const RegisterPage = () => {
     const token = result.accessToken;
     if (token) {
       localStorage.setItem("token", token);
-      alert("Login Success!!!")
-      navigate("/")
+      alert("Login Success!!!");
+      navigate("/");
     } else {
-      alert("Something is wrong!")
+      alert("Something is wrong!");
     }
-  }
+  };
 
   return (
     <div className="flex justify-center items-center">
@@ -71,10 +71,20 @@ export const RegisterPage = () => {
         </h1>
         <form className="pt-3">
           <Form.Item layout="vertical" label="Email">
-            <Input type="text" placeholder="Email" className="p-4" onChange={e => setEmail(e.target.value)} />
+            <Input
+              type="text"
+              placeholder="Email"
+              className="p-4"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </Form.Item>
           <Form.Item layout="vertical" label="Password">
-            <Input type="password" placeholder="Password" className="p-4" onChange={e => setPassword(e.target.value)} />
+            <Input
+              type="password"
+              placeholder="Password"
+              className="p-4"
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </Form.Item>
           {isError && <p className="text-red-600">{isError}</p>}
           <p className="p-6 pl-0 text-gray-500">
@@ -88,12 +98,20 @@ export const RegisterPage = () => {
             </a>
           </p>
           <div className="flex justify-end">
-             <Button className="bg-black text-white rounded-full capitalize px-6 py-5 font-bold text" onClick={(e: any) => handleRegister(e)}>
+            <Button
+              className="bg-black text-white rounded-full capitalize px-6 py-5 font-bold text"
+              onClick={handleRegister}
+            >
               Register
             </Button>
-              {isLogin && <Button className="bg-black text-white rounded-full capitalize px-6 py-5 font-bold text" onClick={(e: any) => handleLogin(e)}>
+            {isLogin && (
+              <Button
+                className="bg-black text-white rounded-full capitalize px-6 py-5 font-bold text"
+                onClick={(e: any) => handleLogin(e)}
+              >
                 Log in
-              </Button>}
+              </Button>
+            )}
           </div>
         </form>
       </div>
